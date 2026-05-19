@@ -12,6 +12,7 @@ export function groupColdPressedByBase(entries: MenuEntry[]): ColdPressedGroup[]
 
       if (existing) {
         existing.mixes.push(...mixes);
+        existing.mixNotes = { ...existing.mixNotes, ...entry.mixNotes };
         existing.sortOrder = Math.min(existing.sortOrder, entry.sortOrder);
         return groups;
       }
@@ -23,6 +24,7 @@ export function groupColdPressedByBase(entries: MenuEntry[]): ColdPressedGroup[]
         accentColor: entry.accentColor,
         priceIdr: entry.priceIdr,
         mixes,
+        mixNotes: entry.mixNotes,
         sortOrder: entry.sortOrder,
       });
 

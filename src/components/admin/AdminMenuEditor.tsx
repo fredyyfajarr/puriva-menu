@@ -5,6 +5,12 @@ import { coldPressedCategoryOptions, getColdPressedCategory } from "@/domain/men
 import { formatShortIdr } from "@/domain/menu/format";
 import type { MenuCatalog, MenuEntry, MenuSection } from "@/domain/menu/types";
 
+function formatMixNotes(mixNotes: Record<string, string>) {
+  return Object.entries(mixNotes)
+    .map(([mix, note]) => `${mix}: ${note}`)
+    .join("\n");
+}
+
 export function AdminMenuEditor({ catalog, isPreviewMode }: { catalog: MenuCatalog; isPreviewMode: boolean }) {
   return (
     <main className="min-h-screen bg-[#f7f3ea] text-[#1f2f22]">
@@ -207,6 +213,17 @@ function EntryForm({
           placeholder="Deep detox"
           disabled={isDisabled}
           className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+        />
+      </label>
+
+      <label className="grid gap-1 text-sm font-bold text-[#4a4f45] sm:col-span-2">
+        Mix benefits
+        <textarea
+          name="mixNotes"
+          defaultValue={entry ? formatMixNotes(entry.mixNotes) : ""}
+          placeholder={"Green Apple: rasa lebih crisp dan segar\nPineapple: bantu pencernaan dan rasa tropical"}
+          disabled={isDisabled}
+          className="min-h-28 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
       </label>
 

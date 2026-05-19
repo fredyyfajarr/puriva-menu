@@ -1,4 +1,4 @@
-import { Apple, Droplets, GlassWater, Leaf, ScanLine, Sparkles, Zap } from "lucide-react";
+import { Apple, ChevronDown, Droplets, GlassWater, HeartPulse, Leaf, ScanLine, Sparkles, Zap } from "lucide-react";
 
 import { formatShortIdr } from "@/domain/menu/format";
 import { groupColdPressedByCategory } from "@/domain/menu/group-cold-pressed";
@@ -15,6 +15,13 @@ const sectionIcons = {
   "pre-made-juice": Droplets,
   "cold-pressed-juice": Leaf,
 };
+
+const fruitBenefitNotes = [
+  "Sunkist dan guava bantu support vitamin C harian.",
+  "Watermelon dan melon cocok untuk pilihan yang lebih hydrating.",
+  "Green apple dan pineapple memberi rasa segar sekaligus bantu balance sweetness.",
+  "Beet, carrot, celery, dan kale cocok untuk rasa clean dengan karakter sayur lebih kuat.",
+];
 
 export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
   const sections = catalog.sections.filter((section) => section.isActive);
@@ -104,27 +111,54 @@ function MenuSectionBlock({ section }: { section: MenuSection }) {
       {section.displayMode === "recipe-cards" ? (
         <div className="grid gap-3 sm:grid-cols-2">
           {section.entries.map((entry) => (
-            <article key={entry.id} className="rounded-[8px] border border-[#f0ddbc] bg-white p-4 shadow-sm">
-              <div className="mb-3 h-2 rounded-full" style={{ backgroundColor: entry.accentColor }} />
-              <h3 className="text-base font-black uppercase text-[#233224]">{entry.name}</h3>
-              <p className="mt-2 text-xs font-semibold uppercase leading-5 tracking-[0.08em] text-[#6b755f]">
-                {entry.ingredients.join(", ")}
-              </p>
-            </article>
+            <details key={entry.id} className="group rounded-[8px] border border-[#f0ddbc] bg-white shadow-sm">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
+                <div className="min-w-0">
+                  <div className="mb-3 h-2 rounded-full" style={{ backgroundColor: entry.accentColor }} />
+                  <h3 className="text-base font-black uppercase text-[#233224]">{entry.name}</h3>
+                  {entry.benefit ? <p className="mt-1 text-sm font-semibold text-[#7a5d21]">{entry.benefit}</p> : null}
+                </div>
+                <ChevronDown className="shrink-0 text-[#7a5d21] transition-transform group-open:rotate-180" size={18} />
+              </summary>
+              <div className="border-t border-[#f3e5cd] px-4 pb-4 pt-3">
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-[#1687a7]">Ingredients</p>
+                <p className="mt-2 text-sm font-semibold uppercase leading-6 text-[#4d5a47]">
+                  {entry.ingredients.join(" / ")}
+                </p>
+              </div>
+            </details>
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {section.entries.map((entry) => (
-            <div
-              key={entry.id}
-              className="rounded-[8px] border border-[#f0ddbc] bg-white px-3 py-3 text-sm font-black uppercase text-[#233224] shadow-sm"
-            >
-              <span className="mb-2 block h-1.5 rounded-full" style={{ backgroundColor: entry.accentColor }} />
-              {entry.name}
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {section.entries.map((entry) => (
+              <div
+                key={entry.id}
+                className="rounded-[8px] border border-[#f0ddbc] bg-white px-3 py-3 text-sm font-black uppercase text-[#233224] shadow-sm"
+              >
+                <span className="mb-2 block h-1.5 rounded-full" style={{ backgroundColor: entry.accentColor }} />
+                {entry.name}
+              </div>
+            ))}
+          </div>
+          {section.slug === "cut-fruits" || section.slug === "blended-juice" ? (
+            <details className="group mt-3 rounded-[8px] border border-[#f0ddbc] bg-white px-4 py-3 shadow-sm">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+                <span className="flex items-center gap-2 text-sm font-black uppercase text-[#173f2a]">
+                  <HeartPulse size={16} />
+                  Fruit benefits note
+                </span>
+                <ChevronDown className="text-[#7a5d21] transition-transform group-open:rotate-180" size={18} />
+              </summary>
+              <ul className="mt-3 space-y-2 text-sm leading-6 text-[#5f6d58]">
+                {fruitBenefitNotes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+            </details>
+          ) : null}
+        </>
       )}
     </section>
   );
@@ -174,8 +208,8 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
 
               <div className="divide-y divide-[#f3e5cd]">
                 {category.groups.map((group) => (
-                  <div key={group.baseName} className="px-4 py-4">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <details key={group.baseName} className="group px-4 py-4">
+                    <summary className="flex cursor-pointer list-none flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="h-3 w-3 rounded-full" style={{ backgroundColor: group.accentColor }} />
@@ -185,19 +219,27 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
                           <p className="mt-1 text-sm font-bold text-[#7a5d21]">{group.benefit}</p>
                         ) : null}
                       </div>
-                      <p className="text-xs font-black uppercase tracking-[0.12em] text-[#1687a7]">Mix pilihan</p>
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
+                      <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-[#1687a7]">
+                        Mix pilihan
+                        <ChevronDown className="transition-transform group-open:rotate-180" size={17} />
+                      </span>
+                    </summary>
+                    <div className="mt-3 grid gap-2">
                       {group.mixes.map((mix) => (
-                        <span
+                        <div
                           key={`${group.baseName}-${mix}`}
-                          className="rounded-full border border-[#ead8b7] bg-[#fff9ef] px-3 py-1 text-xs font-bold uppercase text-[#4d5a47]"
+                          className="rounded-[8px] border border-[#ead8b7] bg-[#fff9ef] px-3 py-2"
                         >
-                          {mix}
-                        </span>
+                          <p className="text-xs font-black uppercase text-[#4d5a47]">
+                            {group.baseName} + {mix}
+                          </p>
+                          {group.mixNotes[mix] ? (
+                            <p className="mt-1 text-sm leading-6 text-[#687460]">{group.mixNotes[mix]}</p>
+                          ) : null}
+                        </div>
                       ))}
                     </div>
-                  </div>
+                  </details>
                 ))}
               </div>
             </article>

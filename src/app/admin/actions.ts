@@ -14,6 +14,7 @@ const entrySchema = z.object({
   ingredients: z.string().trim().min(2),
   baseName: z.string().trim().optional(),
   benefit: z.string().trim().optional(),
+  mixNotes: z.string().trim().optional(),
   categorySlug: z.enum(["roots-detox", "vitamin-c-booster", "hydration"]).optional().or(z.literal("")),
   accentColor: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/),
   priceIdr: z.coerce.number().int().positive().optional().or(z.literal("")),
@@ -28,6 +29,25 @@ function parseIngredients(raw: string) {
     .filter(Boolean);
 }
 
+function parseMixNotes(raw?: string) {
+  if (!raw) return {};
+
+  return raw
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .reduce<Record<string, string>>((notes, line) => {
+      const [mix, ...descriptionParts] = line.split(":");
+      const description = descriptionParts.join(":").trim();
+
+      if (mix?.trim() && description) {
+        notes[mix.trim()] = description;
+      }
+
+      return notes;
+    }, {});
+}
+
 export async function upsertMenuEntryAction(formData: FormData) {
   await requireAdmin();
 
@@ -38,6 +58,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
     ingredients: formData.get("ingredients"),
     baseName: formData.get("baseName") ?? "",
     benefit: formData.get("benefit") ?? "",
+    mixNotes: formData.get("mixNotes") ?? "",
     categorySlug: formData.get("categorySlug") ?? "",
     accentColor: formData.get("accentColor") ?? "#1f7a4d",
     priceIdr: formData.get("priceIdr") ?? "",
@@ -54,6 +75,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
     ingredients: parseIngredients(parsed.ingredients),
     baseName: isColdPressed ? parsed.name : parsed.baseName || null,
     benefit: parsed.benefit || null,
+    mixNotes: parseMixNotes(parsed.mixNotes),
     categorySlug: parsed.categorySlug || null,
     accentColor: parsed.accentColor,
     priceIdr: parsed.priceIdr === "" ? null : parsed.priceIdr ?? null,
