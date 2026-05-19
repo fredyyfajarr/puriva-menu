@@ -1,7 +1,7 @@
-import { Apple, Droplets, GlassWater, Leaf, ScanLine } from "lucide-react";
+import { Apple, Droplets, GlassWater, Leaf, ScanLine, Sparkles, Zap } from "lucide-react";
 
 import { formatShortIdr } from "@/domain/menu/format";
-import { getMixLabel, groupColdPressedByBase } from "@/domain/menu/group-cold-pressed";
+import { groupColdPressedByCategory } from "@/domain/menu/group-cold-pressed";
 import type { MenuCatalog, MenuSection } from "@/domain/menu/types";
 
 type MenuPageProps = {
@@ -33,8 +33,8 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
               <span className="block text-[#d64e2a]">Cold Pressed Juice Menu</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-[#5f6d58] sm:text-lg">
-              Menu digital yang rapi untuk pelanggan QR scan. Varian cold-pressed sudah
-              dikelompokkan per base fruit, jadi pilihan mix lebih gampang dibaca.
+              100% murni dari buah dan sayur segar. Tanpa air, tanpa gula, tanpa sirup,
+              dipress dingin untuk rasa yang clean dan nutrisi yang tetap hidup.
             </p>
           </div>
 
@@ -131,14 +131,14 @@ function MenuSectionBlock({ section }: { section: MenuSection }) {
 }
 
 function ColdPressedSection({ section }: { section: MenuSection }) {
-  const groups = groupColdPressedByBase(section.entries);
+  const categories = groupColdPressedByCategory(section.entries);
 
   return (
     <section>
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="flex items-center gap-2 text-3xl font-black uppercase text-[#173f2a]">
-            <Leaf size={27} />
+            <Sparkles size={27} />
             {section.title}
           </h2>
           <p className="mt-1 text-sm text-[#687460]">{section.description}</p>
@@ -148,25 +148,67 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
         ) : null}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        {groups.map((group) => (
-          <article key={group.baseName} className="rounded-[8px] border border-[#f0ddbc] bg-white p-4 shadow-sm">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <h3 className="text-xl font-black uppercase text-[#233224]">{group.baseName}</h3>
-              <span className="h-4 w-4 rounded-full" style={{ backgroundColor: group.accentColor }} />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {group.options.map((entry) => (
-                <span
-                  key={entry.id}
-                  className="rounded-full border border-[#ead8b7] bg-[#fff9ef] px-3 py-1 text-xs font-bold uppercase text-[#4d5a47]"
-                >
-                  {getMixLabel(entry)}
-                </span>
-              ))}
-            </div>
-          </article>
-        ))}
+      <div className="space-y-4">
+        {categories.map((category, index) => {
+          const Icon = category.icon === "zap" ? Zap : category.icon === "droplets" ? Droplets : Leaf;
+
+          return (
+            <article key={category.slug} className="rounded-[8px] border border-[#f0ddbc] bg-white shadow-sm">
+              <div className="border-b border-[#f0ddbc] px-4 py-4">
+                <div className="flex items-start gap-3">
+                  <div
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] text-white"
+                    style={{ backgroundColor: category.accentColor }}
+                  >
+                    <Icon size={20} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.18em] text-[#9a7a35]">
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <h3 className="text-xl font-black uppercase text-[#173f2a]">{category.title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-[#687460]">{category.subtitle}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="divide-y divide-[#f3e5cd]">
+                {category.groups.map((group) => (
+                  <div key={group.baseName} className="px-4 py-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="h-3 w-3 rounded-full" style={{ backgroundColor: group.accentColor }} />
+                          <h4 className="text-lg font-black uppercase text-[#233224]">{group.baseName} Base</h4>
+                        </div>
+                        {group.benefit ? (
+                          <p className="mt-1 text-sm font-bold text-[#7a5d21]">{group.benefit}</p>
+                        ) : null}
+                      </div>
+                      <p className="text-xs font-black uppercase tracking-[0.12em] text-[#1687a7]">Mix pilihan</p>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {group.mixes.map((mix) => (
+                        <span
+                          key={`${group.baseName}-${mix}`}
+                          className="rounded-full border border-[#ead8b7] bg-[#fff9ef] px-3 py-1 text-xs font-bold uppercase text-[#4d5a47]"
+                        >
+                          {mix}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-4 rounded-[8px] border border-[#f0ddbc] bg-[#173f2a] px-5 py-4 text-center text-white">
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f7d790]">All variants</p>
+        <p className="mt-1 text-3xl font-black">{section.priceIdr ? formatShortIdr(section.priceIdr) : "IDR 35K"}</p>
+        <p className="mt-1 text-sm font-semibold text-[#d8eadc]">Tambah chia seeds +2K</p>
       </div>
     </section>
   );

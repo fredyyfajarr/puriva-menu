@@ -21,6 +21,8 @@ supabase/schema.sql          tables, RLS policies, seed data
 
 The public route can render with local seed data when Supabase env is absent. Admin mutations require Supabase, Auth, and an `admin` profile role.
 
+Cold-pressed entries are stored as one row per base fruit. Example: `Celery` has `ingredients = ['Green Apple', 'Pineapple', 'Melon']`, so admins do not need to create separate rows like `Celery + Pineapple`.
+
 ## Local Run
 
 ```bash
@@ -38,6 +40,7 @@ Open:
 
 1. Create a free Supabase project.
 2. Run `supabase/schema.sql` in the Supabase SQL editor.
+   - If the project was created before the base-level cold-pressed model, run `supabase/migrations/20260520_cold_pressed_base_model.sql`.
 3. Create an auth user in Supabase.
 4. Promote that user:
 

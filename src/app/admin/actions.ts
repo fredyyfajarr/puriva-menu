@@ -13,6 +13,8 @@ const entrySchema = z.object({
   name: z.string().trim().min(2),
   ingredients: z.string().trim().min(2),
   baseName: z.string().trim().optional(),
+  benefit: z.string().trim().optional(),
+  categorySlug: z.enum(["roots-detox", "vitamin-c-booster", "hydration"]).optional().or(z.literal("")),
   accentColor: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/),
   priceIdr: z.coerce.number().int().positive().optional().or(z.literal("")),
   sortOrder: z.coerce.number().int().min(0).optional(),
@@ -35,18 +37,24 @@ export async function upsertMenuEntryAction(formData: FormData) {
     name: formData.get("name"),
     ingredients: formData.get("ingredients"),
     baseName: formData.get("baseName") ?? "",
+    benefit: formData.get("benefit") ?? "",
+    categorySlug: formData.get("categorySlug") ?? "",
     accentColor: formData.get("accentColor") ?? "#1f7a4d",
     priceIdr: formData.get("priceIdr") ?? "",
     sortOrder: formData.get("sortOrder") ?? "999",
     isAvailable: formData.get("isAvailable") ?? "",
   });
 
+  const isColdPressed = parsed.sectionSlug === "cold-pressed-juice";
+
   await createMenuRepository().upsertEntry({
     id: parsed.id || undefined,
     sectionSlug: parsed.sectionSlug,
     name: parsed.name,
     ingredients: parseIngredients(parsed.ingredients),
-    baseName: parsed.baseName || null,
+    baseName: isColdPressed ? parsed.name : parsed.baseName || null,
+    benefit: parsed.benefit || null,
+    categorySlug: parsed.categorySlug || null,
     accentColor: parsed.accentColor,
     priceIdr: parsed.priceIdr === "" ? null : parsed.priceIdr ?? null,
     sortOrder: parsed.sortOrder,

@@ -5,6 +5,7 @@ export type MenuSectionSlug =
   | "cold-pressed-juice";
 
 export type MenuDisplayMode = "compact-list" | "recipe-cards" | "grouped-by-base";
+export type ColdPressedCategorySlug = "roots-detox" | "vitamin-c-booster" | "hydration";
 
 export type MenuEntry = {
   id: string;
@@ -12,6 +13,8 @@ export type MenuEntry = {
   name: string;
   ingredients: string[];
   baseName: string | null;
+  benefit: string | null;
+  categorySlug: ColdPressedCategorySlug | null;
   accentColor: string;
   priceIdr: number | null;
   isAvailable: boolean;
@@ -40,7 +43,19 @@ export type MenuCatalog = {
 
 export type ColdPressedGroup = {
   baseName: string;
+  benefit: string | null;
+  categorySlug: ColdPressedCategorySlug;
   accentColor: string;
   priceIdr: number | null;
-  options: MenuEntry[];
+  mixes: string[];
+  sortOrder: number;
+};
+
+export type ColdPressedCategory = {
+  slug: ColdPressedCategorySlug;
+  title: string;
+  subtitle: string;
+  icon: "leaf" | "zap" | "droplets";
+  accentColor: string;
+  groups: ColdPressedGroup[];
 };

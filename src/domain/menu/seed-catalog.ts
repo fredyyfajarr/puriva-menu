@@ -34,8 +34,8 @@ const sectionMeta: Omit<MenuSection, "entries">[] = [
   {
     id: "cold-pressed-juice",
     slug: "cold-pressed-juice",
-    title: "Cold-Pressed Juice",
-    description: "Pick a base, then choose a clean fruit mix.",
+    title: "Cold-Pressed Bar",
+    description: "100% murni. Tanpa air, tanpa gula, tanpa sirup.",
     displayMode: "grouped-by-base",
     priceIdr: 35000,
     sortOrder: 40,
@@ -56,6 +56,8 @@ function entry(
     name,
     ingredients,
     baseName: null,
+    benefit: null,
+    categorySlug: null,
     accentColor: "#1f7a4d",
     priceIdr: null,
     isAvailable: true,
@@ -111,26 +113,30 @@ const preMade = [
   }),
 );
 
-const coldPressedSource: Array<[string, string[], string]> = [
-  ["Carrot", ["Beet", "Celery", "Green Apple"], "#f97316"],
-  ["Celery", ["Pure", "Melon", "Pineapple", "Green Apple"], "#16a34a"],
-  ["Sunkist", ["Pure", "Carrot", "Pineapple", "Strawberry"], "#ea580c"],
-  ["Melon", ["Pure", "Sunkist", "Green Apple", "Strawberry"], "#65a30d"],
-  ["Pineapple", ["Melon", "Sunkist", "Green Apple", "Strawberry"], "#d97706"],
-  ["Watermelon", ["Sunkist", "Strawberry", "Pineapple"], "#ef4444"],
-  ["Guava", ["Beet", "Sunkist", "Pineapple", "Green Apple", "Watermelon"], "#db2777"],
-  ["Beet", ["Carrot", "Pineapple", "Green Apple"], "#be123c"],
+const coldPressedSource: Array<[string, string[], string, string, MenuEntry["categorySlug"]]> = [
+  ["Carrot", ["Green Apple", "Celery", "Sunkist"], "#f97316", "Mata dan kulit", "roots-detox"],
+  ["Beet", ["Green Apple", "Carrot", "Pineapple"], "#be123c", "Stamina", "roots-detox"],
+  ["Celery", ["Green Apple", "Pineapple", "Melon"], "#16a34a", "Deep detox", "roots-detox"],
+  [
+    "Sunkist",
+    ["Green Apple", "Pineapple", "Strawberry", "Watermelon", "Melon", "Beet"],
+    "#ea580c",
+    "Imun kuat",
+    "vitamin-c-booster",
+  ],
+  ["Pineapple", ["Melon", "Green Apple", "Guava", "Sunkist", "Strawberry"], "#d97706", "Pencernaan", "vitamin-c-booster"],
+  ["Guava", ["Green Apple", "Sunkist", "Strawberry", "Beet", "Pineapple"], "#db2777", "Antioksidan", "vitamin-c-booster"],
+  ["Watermelon", ["Sunkist", "Strawberry", "Green Apple", "Pineapple"], "#ef4444", "Segar", "hydration"],
+  ["Melon", ["Sunkist", "Strawberry", "Green Apple", "Watermelon"], "#65a30d", "Hidrasi ringan", "hydration"],
 ];
 
-const coldPressed = coldPressedSource.flatMap(([baseName, mixes, accentColor], baseIndex) =>
-  mixes.map((mixName, mixIndex) => {
-    const isPure = mixName === "Pure";
-    const ingredients = isPure ? [baseName] : [baseName, mixName];
-    return entry("cold-pressed-juice", ingredients.join(" + "), ingredients, baseIndex * 10 + mixIndex + 1, {
-      baseName,
-      accentColor,
-      priceIdr: 35000,
-    });
+const coldPressed = coldPressedSource.map(([baseName, mixes, accentColor, benefit, categorySlug], baseIndex) =>
+  entry("cold-pressed-juice", baseName, mixes, baseIndex + 1, {
+    baseName,
+    benefit,
+    categorySlug,
+    accentColor,
+    priceIdr: 35000,
   }),
 );
 

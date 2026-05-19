@@ -1,4 +1,5 @@
 import type { ColdPressedGroup, MenuEntry } from "./types";
+import { coldPressedCategoryOptions, getColdPressedCategory } from "./cold-pressed-categories";
 
 export function groupColdPressedByBase(entries: MenuEntry[]): ColdPressedGroup[] {
   const grouped = entries
@@ -6,17 +7,23 @@ export function groupColdPressedByBase(entries: MenuEntry[]): ColdPressedGroup[]
     .reduce<Map<string, ColdPressedGroup>>((groups, entry) => {
       const baseName = entry.baseName ?? entry.ingredients[0] ?? entry.name;
       const existing = groups.get(baseName);
+      const category = getColdPressedCategory(entry.categorySlug);
+      const mixes = getMixes(entry);
 
       if (existing) {
-        existing.options.push(entry);
+        existing.mixes.push(...mixes);
+        existing.sortOrder = Math.min(existing.sortOrder, entry.sortOrder);
         return groups;
       }
 
       groups.set(baseName, {
         baseName,
+        benefit: entry.benefit,
+        categorySlug: category.slug,
         accentColor: entry.accentColor,
         priceIdr: entry.priceIdr,
-        options: [entry],
+        mixes,
+        sortOrder: entry.sortOrder,
       });
 
       return groups;
@@ -24,8 +31,8 @@ export function groupColdPressedByBase(entries: MenuEntry[]): ColdPressedGroup[]
 
   return [...grouped.values()].map((group) => ({
     ...group,
-    options: group.options.sort((left, right) => left.sortOrder - right.sortOrder),
-  }));
+    mixes: [...new Set(group.mixes)].sort((left, right) => Number(left === "Pure") - Number(right === "Pure")),
+  })).sort((left, right) => left.sortOrder - right.sortOrder);
 }
 
 export function getMixLabel(entry: MenuEntry) {
@@ -36,4 +43,26 @@ export function getMixLabel(entry: MenuEntry) {
   );
 
   return mixes.length > 0 ? mixes.join(" + ") : "Pure";
+}
+
+export function getMixes(entry: MenuEntry) {
+  const baseName = entry.baseName ?? entry.name;
+  const isBaseLevelEntry = entry.name.toLowerCase() === baseName.toLowerCase();
+
+  if (isBaseLevelEntry) {
+    return entry.ingredients.length > 0 ? entry.ingredients : ["Pure"];
+  }
+
+  return [getMixLabel(entry)];
+}
+
+export function groupColdPressedByCategory(entries: MenuEntry[]) {
+  const groups = groupColdPressedByBase(entries);
+
+  return coldPressedCategoryOptions
+    .map((category) => ({
+      ...category,
+      groups: groups.filter((group) => group.categorySlug === category.slug),
+    }))
+    .filter((category) => category.groups.length > 0);
 }

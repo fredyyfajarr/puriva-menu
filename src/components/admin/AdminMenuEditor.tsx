@@ -1,6 +1,7 @@
 import { LogOut, Plus, ShieldCheck, Trash2 } from "lucide-react";
 
 import { deleteMenuEntryAction, signOutAction, toggleMenuEntryAction, upsertMenuEntryAction } from "@/app/admin/actions";
+import { coldPressedCategoryOptions, getColdPressedCategory } from "@/domain/menu/cold-pressed-categories";
 import { formatShortIdr } from "@/domain/menu/format";
 import type { MenuCatalog, MenuEntry, MenuSection } from "@/domain/menu/types";
 
@@ -15,7 +16,9 @@ export function AdminMenuEditor({ catalog, isPreviewMode }: { catalog: MenuCatal
               Admin
             </p>
             <h1 className="mt-2 text-3xl font-black text-[#173f2a]">Puriva Live Menu Console</h1>
-            <p className="mt-1 text-sm text-[#65705e]">Edit item, ingredient, price, base cold-pressed, dan availability.</p>
+            <p className="mt-1 text-sm text-[#65705e]">
+              Cold-pressed cukup diatur per base: isi daftar mix sekali, lalu menu pelanggan otomatis rapi.
+            </p>
           </div>
           {!isPreviewMode ? (
             <form action={signOutAction}>
@@ -36,7 +39,7 @@ export function AdminMenuEditor({ catalog, isPreviewMode }: { catalog: MenuCatal
         <section className="mb-8 rounded-[8px] border border-[#e5d7bd] bg-white p-4">
           <h2 className="mb-4 flex items-center gap-2 text-lg font-black text-[#173f2a]">
             <Plus size={19} />
-            Add menu item
+            Add base or menu item
           </h2>
           <EntryForm sections={catalog.sections} isDisabled={isPreviewMode} />
         </section>
@@ -96,6 +99,7 @@ function EntryEditor({
             </div>
             <p className="mt-1 text-sm text-[#65705e]">
               {section.title}
+              {entry.benefit ? ` - ${entry.benefit}` : ""}
               {entry.baseName ? ` - base ${entry.baseName}` : ""} - {entry.ingredients.join(", ")}
             </p>
           </div>
@@ -161,11 +165,11 @@ function EntryForm({
       </label>
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
-        Name
+        Base / menu name
         <input
           name="name"
           defaultValue={entry?.name ?? ""}
-          placeholder="Sunkist + Pineapple"
+          placeholder="Celery"
           disabled={isDisabled}
           className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
           required
@@ -173,11 +177,11 @@ function EntryForm({
       </label>
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45] sm:col-span-2">
-        Ingredients
+        Mix list / ingredients
         <textarea
           name="ingredients"
           defaultValue={entry?.ingredients.join("\n") ?? ""}
-          placeholder={"Sunkist\nPineapple"}
+          placeholder={"Green Apple\nPineapple\nMelon"}
           disabled={isDisabled}
           className="min-h-24 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
           required
@@ -185,14 +189,41 @@ function EntryForm({
       </label>
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
-        Base fruit
+        Base fruit override
         <input
           name="baseName"
           defaultValue={entry?.baseName ?? ""}
-          placeholder="Isi untuk cold-pressed, contoh: Sunkist"
+          placeholder="Opsional. Cold-pressed otomatis pakai base/menu name."
           disabled={isDisabled}
           className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
+      </label>
+
+      <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
+        Benefit
+        <input
+          name="benefit"
+          defaultValue={entry?.benefit ?? ""}
+          placeholder="Deep detox"
+          disabled={isDisabled}
+          className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+        />
+      </label>
+
+      <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
+        Cold-pressed category
+        <select
+          name="categorySlug"
+          defaultValue={getColdPressedCategory(entry?.categorySlug).slug}
+          disabled={isDisabled}
+          className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+        >
+          {coldPressedCategoryOptions.map((category) => (
+            <option key={category.slug} value={category.slug}>
+              {category.title}
+            </option>
+          ))}
+        </select>
       </label>
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
