@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Puriva Live Cold Pressed Juice Menu
 
-## Getting Started
+Dynamic QR menu for Puriva Live, built with Next.js App Router and Supabase. The cold-pressed menu is normalized by `baseName`, so the public view shows groups like `Sunkist -> Pure, Carrot, Pineapple, Strawberry` instead of repeating `Sunkist + ...` on every line.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js `16.2.6`, React `19.2.4`, TypeScript, Tailwind CSS
+- Supabase Auth, Postgres, Row Level Security
+- Vercel-ready frontend and backend client usage through environment variables
+
+## Architecture
+
+```text
+src/domain/menu              business types, formatters, grouping rules, seed catalog
+src/application/menu         repository port and use-case functions
+src/infrastructure/supabase  Supabase client and repository adapter
+src/components               public QR menu and admin editor UI
+src/app                      App Router routes and Server Actions
+supabase/schema.sql          tables, RLS policies, seed data
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The public route can render with local seed data when Supabase env is absent. Admin mutations require Supabase, Auth, and an `admin` profile role.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Local Run
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+cp .env.example .env.local
+npm run dev
+```
 
-## Learn More
+Open:
 
-To learn more about Next.js, take a look at the following resources:
+- Public QR menu: `http://localhost:3000`
+- Admin console: `http://localhost:3000/admin`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Supabase Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Create a free Supabase project.
+2. Run `supabase/schema.sql` in the Supabase SQL editor.
+3. Create an auth user in Supabase.
+4. Promote that user:
 
-## Deploy on Vercel
+```sql
+update public.profiles
+set role = 'admin'
+where email = 'your-admin@email.com';
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. Add these env vars to `.env.local` and Vercel:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+# Or, if your Supabase dashboard shows the newer key name:
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+```
+
+Security notes:
+
+- The anon key is safe to expose because RLS owns access control.
+- Server Actions verify `profiles.role = admin` before every mutation.
+- Public users can only read active sections and available entries.
+- Admin writes use the logged-in user's Supabase session, not a service-role key.
+
+## Deploy
+
+Push the repo to GitHub, import it into Vercel, and set the same Supabase environment variables. Vercel's free tier is enough for this menu app, and Supabase free tier covers the database/auth layer for early usage.
