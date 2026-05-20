@@ -2,8 +2,7 @@
 
 import { Apple, ChevronDown, Droplets, GlassWater, HeartPulse, Leaf, ScanLine, Sparkles, Zap } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { formatShortIdr } from "@/domain/menu/format";
 import { groupColdPressedByCategory } from "@/domain/menu/group-cold-pressed";
@@ -28,35 +27,8 @@ const fruitBenefitNotes = [
   "Beet, carrot, celery, dan kale cocok untuk rasa clean dengan karakter sayur lebih kuat.",
 ];
 
-const heroJuiceImage =
-  "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=900&q=85";
-
-const heroFruitImages = [
-  {
-    name: "Sunkist",
-    src: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=320&q=80",
-    className: "left-4 top-6 h-24 w-24 sm:left-6 sm:top-8",
-    delay: 0,
-  },
-  {
-    name: "Pineapple",
-    src: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=320&q=80",
-    className: "right-7 top-4 h-28 w-24 sm:right-10",
-    delay: 0.5,
-  },
-  {
-    name: "Watermelon",
-    src: "https://images.unsplash.com/photo-1589984662646-e7b2e4962f18?auto=format&fit=crop&w=320&q=80",
-    className: "bottom-8 left-7 h-24 w-28 sm:left-8",
-    delay: 1,
-  },
-  {
-    name: "Green Apple",
-    src: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=320&q=80",
-    className: "bottom-10 right-5 h-24 w-24 sm:right-9",
-    delay: 1.5,
-  },
-];
+const heroVideo = "/media/puriva-orange-splash.mp4";
+const heroPoster = "/media/puriva-orange-splash.jpg";
 
 function getSectionTitle(section: MenuSection) {
   return section.slug === "cold-pressed-juice" ? "Cold-Pressed Juice" : section.title;
@@ -165,51 +137,66 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
 
 function HeroJuiceStage() {
   const shouldReduceMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    const jumpToSplash = () => {
+      if (video.currentTime < 0.5) {
+        video.currentTime = 1.4;
+      }
+    };
+
+    if (video.readyState >= 2) {
+      jumpToSplash();
+      return;
+    }
+
+    video.addEventListener("loadeddata", jumpToSplash, { once: true });
+
+    return () => {
+      video.removeEventListener("loadeddata", jumpToSplash);
+    };
+  }, [shouldReduceMotion]);
 
   return (
-    <motion.div
-      className="relative min-h-[360px] w-full max-w-lg overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#173f2a] shadow-xl"
+    <motion.figure
+      className="w-full max-w-lg"
       initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.55, delay: 0.1, ease: "easeOut" }}
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-75"
-        style={{ backgroundImage: `url("${heroJuiceImage}")` }}
-      />
-      <div className="absolute inset-0 bg-[#173f2a]/55" />
-
-      <motion.div
-        className="absolute left-1/2 top-1/2 h-56 w-36 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-b-[34px] rounded-t-[18px] border-[5px] border-white/90 bg-white shadow-2xl"
-        animate={shouldReduceMotion ? undefined : { y: [0, -8, 0], rotate: [-1.5, 1.5, -1.5] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <div className="mx-auto mt-3 h-5 w-20 rounded-full bg-[#d7f0df]" />
-        <div
-          className="mx-auto mt-4 h-40 w-24 rounded-b-[28px] rounded-t-[10px] bg-cover bg-center"
-          style={{ backgroundImage: `url("${heroJuiceImage}")` }}
-        />
-      </motion.div>
-
-      {heroFruitImages.map((fruit) => (
-        <motion.div
-          key={fruit.name}
-          className={`absolute overflow-hidden rounded-[8px] border border-white/50 bg-white/80 shadow-xl backdrop-blur-sm ${fruit.className}`}
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 16, rotate: -4 }}
-          animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -10, 0], rotate: [-3, 3, -3] }}
-          transition={{
-            opacity: { delay: fruit.delay, duration: 0.35 },
-            y: { delay: fruit.delay, duration: 5.5, repeat: Infinity, ease: "easeInOut" },
-            rotate: { delay: fruit.delay, duration: 6, repeat: Infinity, ease: "easeInOut" },
-          }}
+      <div className="relative min-h-[360px] overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#101b14] shadow-xl">
+        <video
+          ref={videoRef}
+          aria-label="Orange juice liquid splash animation"
+          className="absolute inset-0 h-full w-full object-cover"
+          poster={heroPoster}
+          autoPlay={!shouldReduceMotion}
+          muted
+          loop={!shouldReduceMotion}
+          playsInline
+          preload="metadata"
         >
-          <Image src={fruit.src} alt={fruit.name} fill sizes="112px" className="object-cover" />
-          <span className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2 py-1 text-[10px] font-black uppercase text-[#173f2a]">
-            {fruit.name}
-          </span>
-        </motion.div>
-      ))}
-    </motion.div>
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0e1711]/20 via-transparent to-[#0e1711]/20" />
+      </div>
+      <figcaption className="mt-2 flex justify-end">
+        <a
+          href="https://www.vecteezy.com/free-videos/juice"
+          target="_blank"
+          rel="noreferrer"
+          className="text-[10px] font-semibold text-[#8c7a5d] transition hover:text-[#173f2a]"
+        >
+          Juice Stock Videos by Vecteezy
+        </a>
+      </figcaption>
+    </motion.figure>
   );
 }
 
