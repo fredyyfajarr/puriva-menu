@@ -40,7 +40,7 @@ Open:
 
 1. Create a free Supabase project.
 2. Run `supabase/schema.sql` in the Supabase SQL editor.
-   - If the project was created before the base-level cold-pressed model, run `supabase/migrations/20260520_cold_pressed_base_model.sql`.
+   - If the project was created before the latest dropdown/benefit model, run `supabase/migrations/20260520000100_apply_latest_menu_model.sql`.
 3. Create an auth user in Supabase.
 4. Promote that user:
 
