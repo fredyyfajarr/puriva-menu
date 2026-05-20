@@ -30,6 +30,10 @@ function getSectionTitle(section: MenuSection) {
   return section.slug === "cold-pressed-juice" ? "Cold-Pressed Juice" : section.title;
 }
 
+function getMixLabel(mix: string) {
+  return mix.toLowerCase() === "original" ? "Original" : `+ ${mix}`;
+}
+
 export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
   const sections = catalog.sections.filter((section) => section.isActive);
   const defaultSlug = sections.find((section) => section.slug === "cold-pressed-juice")?.slug ?? sections[0]?.slug ?? "cold-pressed-juice";
@@ -78,7 +82,7 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
                 key={section.id}
                 type="button"
                 onClick={() => setActiveSlug(section.slug)}
-                className={`inline-flex h-12 shrink-0 items-center gap-2 rounded-[8px] border px-4 text-sm font-black uppercase transition ${
+                className={`inline-flex h-12 shrink-0 items-center gap-2 rounded-[8px] border px-4 text-sm font-black uppercase transition duration-200 hover:-translate-y-0.5 hover:shadow-sm ${
                   isActive
                     ? "border-[#173f2a] bg-[#173f2a] text-white"
                     : "border-[#f0ddbc] bg-white text-[#4d5a47]"
@@ -91,11 +95,13 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
           })}
         </div>
 
-        {activeSection?.displayMode === "grouped-by-base" ? (
-          <ColdPressedSection section={activeSection} />
-        ) : activeSection ? (
-          <MenuSectionBlock section={activeSection} />
-        ) : null}
+        <div key={activeSection?.slug} className="animate-menu-panel">
+          {activeSection?.displayMode === "grouped-by-base" ? (
+            <ColdPressedSection section={activeSection} />
+          ) : activeSection ? (
+            <MenuSectionBlock section={activeSection} />
+          ) : null}
+        </div>
       </div>
     </main>
   );
@@ -136,13 +142,23 @@ function AnimatedFruitDisplay() {
   );
 }
 
-function MenuImageFrame({ imageUrl, name, accentColor }: { imageUrl: string | null; name: string; accentColor: string }) {
+function MenuImageFrame({
+  imageUrl,
+  name,
+  accentColor,
+  className = "mb-3",
+}: {
+  imageUrl: string | null | undefined;
+  name: string;
+  accentColor: string;
+  className?: string;
+}) {
   return (
-    <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#fff6e5]">
+    <div className={`${className} aspect-[4/3] overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#fff6e5]`}>
       {imageUrl ? (
         <div
           aria-label={name}
-          className="h-full w-full bg-cover bg-center"
+          className="h-full w-full bg-cover bg-center transition duration-300 hover:scale-105"
           style={{ backgroundImage: `url("${imageUrl}")` }}
         />
       ) : (
@@ -176,17 +192,17 @@ function MenuSectionBlock({ section }: { section: MenuSection }) {
       {section.displayMode === "recipe-cards" ? (
         <div className="grid gap-3 sm:grid-cols-2">
           {section.entries.map((entry) => (
-            <details key={entry.id} className="group rounded-[8px] border border-[#f0ddbc] bg-white shadow-sm">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
-                <div className="min-w-0">
+            <details key={entry.id} className="group rounded-[8px] border border-[#f0ddbc] bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              <summary className="relative cursor-pointer list-none p-4 pr-12">
+                <div>
                   <MenuImageFrame imageUrl={entry.imageUrl} name={entry.name} accentColor={entry.accentColor} />
                   <div className="mb-3 h-2 rounded-full" style={{ backgroundColor: entry.accentColor }} />
                   <h3 className="text-base font-black uppercase text-[#233224]">{entry.name}</h3>
                   {entry.benefit ? <p className="mt-1 text-sm font-semibold text-[#7a5d21]">{entry.benefit}</p> : null}
                 </div>
-                <ChevronDown className="shrink-0 text-[#7a5d21] transition-transform group-open:rotate-180" size={18} />
+                <ChevronDown className="absolute right-4 top-4 shrink-0 text-[#7a5d21] transition-transform group-open:rotate-180" size={18} />
               </summary>
-              <div className="border-t border-[#f3e5cd] px-4 pb-4 pt-3">
+              <div className="animate-menu-panel border-t border-[#f3e5cd] px-4 pb-4 pt-3">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-[#1687a7]">Ingredients</p>
                 <p className="mt-2 text-sm font-semibold uppercase leading-6 text-[#4d5a47]">
                   {entry.ingredients.join(" + ")}
@@ -201,7 +217,7 @@ function MenuSectionBlock({ section }: { section: MenuSection }) {
             {section.entries.map((entry) => (
               <div
                 key={entry.id}
-                className="rounded-[8px] border border-[#f0ddbc] bg-white p-3 text-sm font-black uppercase text-[#233224] shadow-sm"
+                className="rounded-[8px] border border-[#f0ddbc] bg-white p-3 text-sm font-black uppercase text-[#233224] shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
               >
                 <MenuImageFrame imageUrl={entry.imageUrl} name={entry.name} accentColor={entry.accentColor} />
                 <span className="mb-2 block h-1.5 rounded-full" style={{ backgroundColor: entry.accentColor }} />
@@ -278,7 +294,6 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
                   <details key={group.baseName} className="group px-4 py-4">
                     <summary className="flex cursor-pointer list-none flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <MenuImageFrame imageUrl={group.imageUrl} name={group.baseName} accentColor={group.accentColor} />
                         <div className="flex items-center gap-2">
                           <span className="h-3 w-3 rounded-full" style={{ backgroundColor: group.accentColor }} />
                           <h4 className="text-lg font-black uppercase text-[#233224]">{group.baseName} Base</h4>
@@ -296,12 +311,20 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
                       {group.mixes.map((mix) => (
                         <div
                           key={`${group.baseName}-${mix}`}
-                          className="rounded-[8px] border border-[#ead8b7] bg-[#fff9ef] px-3 py-2"
+                          className="grid gap-3 rounded-[8px] border border-[#ead8b7] bg-[#fff9ef] p-3 transition duration-200 hover:-translate-y-0.5 hover:bg-white sm:grid-cols-[112px_minmax(0,1fr)]"
                         >
-                          <p className="text-xs font-black uppercase text-[#4d5a47]">+ {mix}</p>
-                          {group.mixNotes[mix] ? (
-                            <p className="mt-1 text-sm leading-6 text-[#687460]">{group.mixNotes[mix]}</p>
-                          ) : null}
+                          <MenuImageFrame
+                            imageUrl={group.mixImageUrls[mix]}
+                            name={`${group.baseName} ${mix}`}
+                            accentColor={group.accentColor}
+                            className="mb-0"
+                          />
+                          <div className="self-center">
+                            <p className="text-xs font-black uppercase text-[#4d5a47]">{getMixLabel(mix)}</p>
+                            {group.mixNotes[mix] ? (
+                              <p className="mt-1 text-sm leading-6 text-[#687460]">{group.mixNotes[mix]}</p>
+                            ) : null}
+                          </div>
                         </div>
                       ))}
                     </div>

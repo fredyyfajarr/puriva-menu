@@ -58,6 +58,7 @@ function entry(
     baseName: null,
     benefit: null,
     mixNotes: {},
+    mixImageUrls: {},
     categorySlug: null,
     imageUrl: null,
     accentColor: "#1f7a4d",
@@ -143,8 +144,9 @@ const coldPressedSource: Array<[string, string[], Record<string, string>, string
   ],
   [
     "Celery",
-    ["Green Apple", "Pineapple", "Melon"],
+    ["Original", "Green Apple", "Pineapple", "Melon"],
     {
+      Original: "Celery murni tanpa campuran untuk rasa paling clean dan ringan.",
       "Green Apple": "Lebih crisp, segar, dan mudah diminum.",
       Pineapple: "Manis-asam tropical untuk bantu pencernaan.",
       Melon: "Lebih ringan dan hydrating.",
@@ -155,8 +157,9 @@ const coldPressedSource: Array<[string, string[], Record<string, string>, string
   ],
   [
     "Sunkist",
-    ["Green Apple", "Pineapple", "Strawberry", "Watermelon", "Melon", "Beet"],
+    ["Original", "Green Apple", "Pineapple", "Strawberry", "Watermelon", "Melon", "Beet"],
     {
+      Original: "Sunkist murni untuk citrus vitamin C yang clean dan bright.",
       "Green Apple": "Crisp dan fresh untuk balance rasa citrus.",
       Pineapple: "Tropical vitamin C dengan rasa lebih juicy.",
       Strawberry: "Antioksidan berry dan rasa manis-asam.",
@@ -170,8 +173,9 @@ const coldPressedSource: Array<[string, string[], Record<string, string>, string
   ],
   [
     "Pineapple",
-    ["Melon", "Green Apple", "Guava", "Sunkist", "Strawberry"],
+    ["Original", "Melon", "Green Apple", "Guava", "Sunkist", "Strawberry"],
     {
+      Original: "Pineapple murni dengan rasa tropical dan karakter manis-asam.",
       Melon: "Lebih smooth dan hydrating.",
       "Green Apple": "Crisp acidity untuk rasa lebih segar.",
       Guava: "Antioksidan dan body rasa lebih tebal.",
@@ -198,8 +202,9 @@ const coldPressedSource: Array<[string, string[], Record<string, string>, string
   ],
   [
     "Watermelon",
-    ["Sunkist", "Strawberry", "Green Apple", "Pineapple"],
+    ["Original", "Sunkist", "Strawberry", "Green Apple", "Pineapple"],
     {
+      Original: "Watermelon murni untuk hidrasi yang ringan dan juicy.",
       Sunkist: "Citrus fresh untuk rasa lebih lively.",
       Strawberry: "Berry note dan antioksidan.",
       "Green Apple": "Crisp dan balance manis watermelon.",
@@ -211,8 +216,9 @@ const coldPressedSource: Array<[string, string[], Record<string, string>, string
   ],
   [
     "Melon",
-    ["Sunkist", "Strawberry", "Green Apple", "Watermelon"],
+    ["Original", "Sunkist", "Strawberry", "Green Apple", "Watermelon"],
     {
+      Original: "Melon murni untuk rasa lembut, dingin, dan hydrating.",
       Sunkist: "Citrus lift untuk rasa lebih fresh.",
       Strawberry: "Manis-asam ringan dengan antioksidan.",
       "Green Apple": "Crisp dan clean.",
@@ -220,6 +226,19 @@ const coldPressedSource: Array<[string, string[], Record<string, string>, string
     },
     "#65a30d",
     "Hidrasi ringan",
+    "hydration",
+  ],
+  [
+    "Cucumber",
+    ["Original", "Pineapple", "Celery", "Green Apple"],
+    {
+      Original: "Cucumber murni untuk rasa clean, ringan, dan cooling.",
+      Pineapple: "Lebih tropical dan mudah diminum.",
+      Celery: "Karakter green lebih kuat untuk detox harian.",
+      "Green Apple": "Crisp dan fresh untuk balance rasa cucumber.",
+    },
+    "#0f9f6e",
+    "Cooling detox",
     "hydration",
   ],
 ];

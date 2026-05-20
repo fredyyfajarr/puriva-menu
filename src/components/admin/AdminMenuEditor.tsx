@@ -32,6 +32,7 @@ function entrySearchText(entry: MenuEntry) {
     entry.baseName,
     entry.benefit,
     entry.imageUrl,
+    Object.values(entry.mixImageUrls).join(" "),
     entry.ingredients.join(" "),
     Object.keys(entry.mixNotes).join(" "),
     Object.values(entry.mixNotes).join(" "),
@@ -271,7 +272,12 @@ function TableRow({
       <tr className="align-top">
         <td className="px-4 py-4">
           <div className="h-16 w-20 overflow-hidden rounded-[8px] border border-[#ead8b7] bg-[#fffaf0]">
-            {entry.imageUrl ? (
+            {activeSection.slug === "cold-pressed-juice" && Object.values(entry.mixImageUrls)[0] ? (
+              <div
+                className="h-full w-full bg-cover bg-center"
+                style={{ backgroundImage: `url("${Object.values(entry.mixImageUrls)[0]}")` }}
+              />
+            ) : entry.imageUrl ? (
               <div
                 className="h-full w-full bg-cover bg-center"
                 style={{ backgroundImage: `url("${entry.imageUrl}")` }}
@@ -402,19 +408,21 @@ function EntryForm({
         />
       </label>
 
-      <label className="grid gap-1 text-sm font-bold text-[#4a4f45] sm:col-span-2">
-        Menu image
-        <input
-          name="imageFile"
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-          disabled={isDisabled}
-          className="rounded-[8px] border border-[#d9c8a7] bg-white px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
-        />
-        {entry?.imageUrl ? (
-          <span className="text-xs font-medium text-[#65705e]">Existing image will stay unless a new file is uploaded.</span>
-        ) : null}
-      </label>
+      {!isColdPressed ? (
+        <label className="grid gap-1 text-sm font-bold text-[#4a4f45] sm:col-span-2">
+          Menu image
+          <input
+            name="imageFile"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            disabled={isDisabled}
+            className="rounded-[8px] border border-[#d9c8a7] bg-white px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          />
+          {entry?.imageUrl ? (
+            <span className="text-xs font-medium text-[#65705e]">Existing image will stay unless a new file is uploaded.</span>
+          ) : null}
+        </label>
+      ) : null}
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45] sm:col-span-2">
         {isColdPressed ? "Mix list" : "Ingredients"}
@@ -460,6 +468,52 @@ function EntryForm({
           className="min-h-28 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
       </label>
+
+      {isColdPressed ? (
+        <div className="grid gap-3 rounded-[8px] border border-[#ead8b7] bg-white p-3 sm:col-span-2">
+          <div>
+            <p className="text-sm font-black text-[#173f2a]">Mix photos</p>
+            <p className="mt-1 text-xs font-medium leading-5 text-[#65705e]">
+              Foto cold-pressed disimpan per pilihan mix karena warna tiap campuran beda.
+            </p>
+          </div>
+          {entry ? (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {entry.ingredients.map((mix) => (
+                <label key={mix} className="grid gap-1 text-xs font-bold text-[#4a4f45]">
+                  {mix}
+                  <input
+                    name={`mixImageFile:${mix}`}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    disabled={isDisabled}
+                    className="rounded-[8px] border border-[#d9c8a7] bg-[#fffaf0] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+                  />
+                  {entry.mixImageUrls[mix] ? (
+                    <span className="font-medium text-[#65705e]">Existing image will stay unless replaced.</span>
+                  ) : null}
+                </label>
+              ))}
+            </div>
+          ) : (
+            <p className="rounded-[8px] bg-[#fffaf0] px-3 py-2 text-xs font-semibold leading-5 text-[#7a5d21]">
+              Create base dulu, lalu edit item itu untuk upload foto per mix.
+            </p>
+          )}
+          <label className="grid gap-1 text-xs font-bold text-[#4a4f45]">
+            Existing mix image URLs
+            <textarea
+              name="mixImageUrls"
+              defaultValue={entry ? formatMixNotes(entry.mixImageUrls) : ""}
+              placeholder={"Original: https://...\nGreen Apple: https://..."}
+              disabled={isDisabled}
+              className="min-h-20 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+            />
+          </label>
+        </div>
+      ) : (
+        <input type="hidden" name="mixImageUrls" value="" />
+      )}
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
         Cold-pressed category

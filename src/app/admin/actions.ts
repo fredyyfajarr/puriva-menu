@@ -15,6 +15,7 @@ const entrySchema = z.object({
   baseName: z.string().trim().optional(),
   benefit: z.string().trim().optional(),
   mixNotes: z.string().trim().optional(),
+  mixImageUrls: z.string().trim().optional(),
   categorySlug: z.enum(["roots-detox", "vitamin-c-booster", "hydration"]).optional().or(z.literal("")),
   imageUrl: z.string().trim().url().optional().or(z.literal("")),
   accentColor: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/),
@@ -30,23 +31,40 @@ function parseIngredients(raw: string) {
     .filter(Boolean);
 }
 
-function parseMixNotes(raw?: string) {
+function parseKeyValueLines(raw?: string) {
   if (!raw) return {};
 
   return raw
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
-    .reduce<Record<string, string>>((notes, line) => {
-      const [mix, ...descriptionParts] = line.split(":");
-      const description = descriptionParts.join(":").trim();
+    .reduce<Record<string, string>>((values, line) => {
+      const [key, ...valueParts] = line.split(":");
+      const value = valueParts.join(":").trim();
 
-      if (mix?.trim() && description) {
-        notes[mix.trim()] = description;
+      if (key?.trim() && value) {
+        values[key.trim()] = value;
       }
 
-      return notes;
+      return values;
     }, {});
+}
+
+async function uploadMixImages(formData: FormData, rawMixImageUrls: string | undefined, entryName: string) {
+  const imageUrls = parseKeyValueLines(rawMixImageUrls);
+
+  for (const [key, value] of formData.entries()) {
+    if (!key.startsWith("mixImageFile:") || !(value instanceof File)) continue;
+
+    const mix = key.replace("mixImageFile:", "").trim();
+    const uploadedUrl = await uploadMenuImage(value, `${entryName}-${mix}`);
+
+    if (mix && uploadedUrl) {
+      imageUrls[mix] = uploadedUrl;
+    }
+  }
+
+  return imageUrls;
 }
 
 function slugifyFileName(value: string) {
@@ -89,6 +107,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
     baseName: formData.get("baseName") ?? "",
     benefit: formData.get("benefit") ?? "",
     mixNotes: formData.get("mixNotes") ?? "",
+    mixImageUrls: formData.get("mixImageUrls") ?? "",
     categorySlug: formData.get("categorySlug") ?? "",
     imageUrl: formData.get("imageUrl") ?? "",
     accentColor: formData.get("accentColor") ?? "#1f7a4d",
@@ -99,6 +118,9 @@ export async function upsertMenuEntryAction(formData: FormData) {
 
   const isColdPressed = parsed.sectionSlug === "cold-pressed-juice";
   const uploadedImageUrl = await uploadMenuImage(formData.get("imageFile") as File | null, parsed.name);
+  const mixImageUrls = isColdPressed
+    ? await uploadMixImages(formData, parsed.mixImageUrls, parsed.name)
+    : {};
 
   await createMenuRepository().upsertEntry({
     id: parsed.id || undefined,
@@ -107,7 +129,8 @@ export async function upsertMenuEntryAction(formData: FormData) {
     ingredients: parseIngredients(parsed.ingredients),
     baseName: isColdPressed ? parsed.name : parsed.baseName || null,
     benefit: parsed.benefit || null,
-    mixNotes: isColdPressed ? parseMixNotes(parsed.mixNotes) : {},
+    mixNotes: isColdPressed ? parseKeyValueLines(parsed.mixNotes) : {},
+    mixImageUrls,
     categorySlug: isColdPressed ? parsed.categorySlug || null : null,
     imageUrl: uploadedImageUrl ?? (parsed.imageUrl || null),
     accentColor: parsed.accentColor,
