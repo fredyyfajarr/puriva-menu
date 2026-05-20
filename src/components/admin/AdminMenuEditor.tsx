@@ -31,6 +31,7 @@ function entrySearchText(entry: MenuEntry) {
     entry.name,
     entry.baseName,
     entry.benefit,
+    entry.imageUrl,
     entry.ingredients.join(" "),
     Object.keys(entry.mixNotes).join(" "),
     Object.values(entry.mixNotes).join(" "),
@@ -217,9 +218,10 @@ function MenuTable({
   return (
     <section className="overflow-hidden rounded-[8px] border border-[#e5d7bd] bg-white shadow-sm">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+        <table className="w-full min-w-[1000px] border-collapse text-left text-sm">
           <thead className="bg-[#fffaf0] text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21]">
             <tr>
+              <th className="px-4 py-3">Photo</th>
               <th className="px-4 py-3">Item</th>
               <th className="px-4 py-3">Mix / Ingredients</th>
               <th className="px-4 py-3">Benefit</th>
@@ -241,7 +243,7 @@ function MenuTable({
               ))
             ) : (
               <tr>
-                <td className="px-4 py-8 text-center text-[#65705e]" colSpan={6}>
+                <td className="px-4 py-8 text-center text-[#65705e]" colSpan={7}>
                   No menu item found.
                 </td>
               </tr>
@@ -267,6 +269,20 @@ function TableRow({
   return (
     <>
       <tr className="align-top">
+        <td className="px-4 py-4">
+          <div className="h-16 w-20 overflow-hidden rounded-[8px] border border-[#ead8b7] bg-[#fffaf0]">
+            {entry.imageUrl ? (
+              <div
+                className="h-full w-full bg-cover bg-center"
+                style={{ backgroundImage: `url("${entry.imageUrl}")` }}
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-[10px] font-black uppercase text-[#9a7a35]">
+                No image
+              </div>
+            )}
+          </div>
+        </td>
         <td className="px-4 py-4">
           <div className="flex items-start gap-2">
             <span className="mt-1.5 h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: entry.accentColor }} />
@@ -320,7 +336,7 @@ function TableRow({
         </td>
       </tr>
       <tr>
-        <td className="bg-[#fffaf0] px-4 py-3" colSpan={6}>
+        <td className="bg-[#fffaf0] px-4 py-3" colSpan={7}>
           <details className="group">
             <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-[#173f2a]">
               <Pencil size={15} />
@@ -356,6 +372,7 @@ function EntryForm({
   return (
     <form action={upsertMenuEntryAction} className="grid gap-4 sm:grid-cols-2">
       <input type="hidden" name="id" value={entry?.id ?? ""} />
+      <input type="hidden" name="imageUrl" value={entry?.imageUrl ?? ""} />
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
         Section
@@ -383,6 +400,20 @@ function EntryForm({
           className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
           required
         />
+      </label>
+
+      <label className="grid gap-1 text-sm font-bold text-[#4a4f45] sm:col-span-2">
+        Menu image
+        <input
+          name="imageFile"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          disabled={isDisabled}
+          className="rounded-[8px] border border-[#d9c8a7] bg-white px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+        />
+        {entry?.imageUrl ? (
+          <span className="text-xs font-medium text-[#65705e]">Existing image will stay unless a new file is uploaded.</span>
+        ) : null}
       </label>
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45] sm:col-span-2">

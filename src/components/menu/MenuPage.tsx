@@ -1,4 +1,7 @@
+"use client";
+
 import { Apple, ChevronDown, Droplets, GlassWater, HeartPulse, Leaf, ScanLine, Sparkles, Zap } from "lucide-react";
+import { useState } from "react";
 
 import { formatShortIdr } from "@/domain/menu/format";
 import { groupColdPressedByCategory } from "@/domain/menu/group-cold-pressed";
@@ -29,11 +32,14 @@ function getSectionTitle(section: MenuSection) {
 
 export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
   const sections = catalog.sections.filter((section) => section.isActive);
+  const defaultSlug = sections.find((section) => section.slug === "cold-pressed-juice")?.slug ?? sections[0]?.slug ?? "cold-pressed-juice";
+  const [activeSlug, setActiveSlug] = useState(defaultSlug);
+  const activeSection = sections.find((section) => section.slug === activeSlug) ?? sections[0];
 
   return (
     <main className="min-h-screen bg-[#fff9ef] text-[#233224]">
       <section className="border-b border-[#f0ddbc] bg-[#fffdf7]">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-8 sm:px-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-3xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#e8d4ab] bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#7a5d21]">
               <ScanLine size={14} />
@@ -49,19 +55,7 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
             </p>
           </div>
 
-          <div className="grid min-w-64 grid-cols-3 gap-2 rounded-[8px] border border-[#f0ddbc] bg-[#fff6e5] p-3">
-            {["Sunkist", "Pineapple", "Guava", "Melon", "Beet", "Celery"].map((fruit, index) => (
-              <div
-                key={fruit}
-                className="flex aspect-square items-center justify-center rounded-[8px] text-xs font-black uppercase text-white shadow-sm"
-                style={{
-                  backgroundColor: ["#ea580c", "#d97706", "#db2777", "#65a30d", "#be123c", "#16a34a"][index],
-                }}
-              >
-                {fruit.slice(0, 3)}
-              </div>
-            ))}
-          </div>
+          <AnimatedFruitDisplay />
         </div>
       </section>
 
@@ -73,24 +67,91 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
         </div>
       ) : null}
 
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[0.85fr_1.15fr]">
-        <div className="space-y-8">
-          {sections
-            .filter((section) => section.displayMode !== "grouped-by-base")
-            .map((section) => (
-              <MenuSectionBlock key={section.id} section={section} />
-            ))}
+      <div className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-8">
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-2">
+          {sections.map((section) => {
+            const Icon = sectionIcons[section.slug];
+            const isActive = section.slug === activeSection?.slug;
+
+            return (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => setActiveSlug(section.slug)}
+                className={`inline-flex h-12 shrink-0 items-center gap-2 rounded-[8px] border px-4 text-sm font-black uppercase transition ${
+                  isActive
+                    ? "border-[#173f2a] bg-[#173f2a] text-white"
+                    : "border-[#f0ddbc] bg-white text-[#4d5a47]"
+                }`}
+              >
+                <Icon size={17} />
+                {getSectionTitle(section)}
+              </button>
+            );
+          })}
         </div>
 
-        <div className="space-y-8">
-          {sections
-            .filter((section) => section.displayMode === "grouped-by-base")
-            .map((section) => (
-              <ColdPressedSection key={section.id} section={section} />
-            ))}
-        </div>
+        {activeSection?.displayMode === "grouped-by-base" ? (
+          <ColdPressedSection section={activeSection} />
+        ) : activeSection ? (
+          <MenuSectionBlock section={activeSection} />
+        ) : null}
       </div>
     </main>
+  );
+}
+
+function AnimatedFruitDisplay() {
+  const fruits = [
+    { name: "Sunkist", color: "#ea580c", delay: "0s" },
+    { name: "Pineapple", color: "#d97706", delay: "-1.5s" },
+    { name: "Guava", color: "#db2777", delay: "-3s" },
+    { name: "Melon", color: "#65a30d", delay: "-4.5s" },
+    { name: "Beet", color: "#be123c", delay: "-6s" },
+    { name: "Celery", color: "#16a34a", delay: "-7.5s" },
+  ];
+
+  return (
+    <div className="relative min-h-72 w-full max-w-sm overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#fff6e5] p-5 shadow-sm">
+      <div className="absolute left-1/2 top-1/2 h-28 w-20 -translate-x-1/2 -translate-y-1/2 rounded-b-[26px] rounded-t-[12px] border-4 border-[#173f2a] bg-white shadow-lg">
+        <div className="mx-auto mt-2 h-4 w-10 rounded-full bg-[#d7f0df]" />
+        <div className="mx-auto mt-3 h-16 w-12 rounded-b-[22px] rounded-t-[8px] bg-[#f28a2e]" />
+      </div>
+      {fruits.map((fruit, index) => (
+        <div
+          key={fruit.name}
+          className="absolute flex h-16 w-16 items-center justify-center rounded-[18px] text-center text-[10px] font-black uppercase leading-tight text-white shadow-md"
+          style={{
+            backgroundColor: fruit.color,
+            animation: `fruit-float 9s ease-in-out infinite`,
+            animationDelay: fruit.delay,
+            left: `${12 + (index % 3) * 31}%`,
+            top: `${12 + Math.floor(index / 3) * 54}%`,
+          }}
+        >
+          {fruit.name}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MenuImageFrame({ imageUrl, name, accentColor }: { imageUrl: string | null; name: string; accentColor: string }) {
+  return (
+    <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#fff6e5]">
+      {imageUrl ? (
+        <div
+          aria-label={name}
+          className="h-full w-full bg-cover bg-center"
+          style={{ backgroundImage: `url("${imageUrl}")` }}
+        />
+      ) : (
+        <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-4 text-center">
+          <span className="h-10 w-10 rounded-[12px]" style={{ backgroundColor: accentColor }} />
+          <p className="text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21]">Photo coming soon</p>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -118,6 +179,7 @@ function MenuSectionBlock({ section }: { section: MenuSection }) {
             <details key={entry.id} className="group rounded-[8px] border border-[#f0ddbc] bg-white shadow-sm">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
                 <div className="min-w-0">
+                  <MenuImageFrame imageUrl={entry.imageUrl} name={entry.name} accentColor={entry.accentColor} />
                   <div className="mb-3 h-2 rounded-full" style={{ backgroundColor: entry.accentColor }} />
                   <h3 className="text-base font-black uppercase text-[#233224]">{entry.name}</h3>
                   {entry.benefit ? <p className="mt-1 text-sm font-semibold text-[#7a5d21]">{entry.benefit}</p> : null}
@@ -139,8 +201,9 @@ function MenuSectionBlock({ section }: { section: MenuSection }) {
             {section.entries.map((entry) => (
               <div
                 key={entry.id}
-                className="rounded-[8px] border border-[#f0ddbc] bg-white px-3 py-3 text-sm font-black uppercase text-[#233224] shadow-sm"
+                className="rounded-[8px] border border-[#f0ddbc] bg-white p-3 text-sm font-black uppercase text-[#233224] shadow-sm"
               >
+                <MenuImageFrame imageUrl={entry.imageUrl} name={entry.name} accentColor={entry.accentColor} />
                 <span className="mb-2 block h-1.5 rounded-full" style={{ backgroundColor: entry.accentColor }} />
                 {entry.name}
               </div>
@@ -215,6 +278,7 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
                   <details key={group.baseName} className="group px-4 py-4">
                     <summary className="flex cursor-pointer list-none flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
+                        <MenuImageFrame imageUrl={group.imageUrl} name={group.baseName} accentColor={group.accentColor} />
                         <div className="flex items-center gap-2">
                           <span className="h-3 w-3 rounded-full" style={{ backgroundColor: group.accentColor }} />
                           <h4 className="text-lg font-black uppercase text-[#233224]">{group.baseName} Base</h4>

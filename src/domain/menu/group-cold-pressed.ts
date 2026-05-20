@@ -22,6 +22,7 @@ export function groupColdPressedByBase(entries: MenuEntry[]): ColdPressedGroup[]
         benefit: entry.benefit,
         categorySlug: category.slug,
         accentColor: entry.accentColor,
+        imageUrl: entry.imageUrl,
         priceIdr: entry.priceIdr,
         mixes,
         mixNotes: entry.mixNotes,

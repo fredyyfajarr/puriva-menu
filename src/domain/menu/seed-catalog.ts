@@ -59,6 +59,7 @@ function entry(
     benefit: null,
     mixNotes: {},
     categorySlug: null,
+    imageUrl: null,
     accentColor: "#1f7a4d",
     priceIdr: null,
     isAvailable: true,

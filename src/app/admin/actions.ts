@@ -16,6 +16,7 @@ const entrySchema = z.object({
   benefit: z.string().trim().optional(),
   mixNotes: z.string().trim().optional(),
   categorySlug: z.enum(["roots-detox", "vitamin-c-booster", "hydration"]).optional().or(z.literal("")),
+  imageUrl: z.string().trim().url().optional().or(z.literal("")),
   accentColor: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/),
   priceIdr: z.coerce.number().int().positive().optional().or(z.literal("")),
   sortOrder: z.coerce.number().int().min(0).optional(),
@@ -48,6 +49,35 @@ function parseMixNotes(raw?: string) {
     }, {});
 }
 
+function slugifyFileName(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9.]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+async function uploadMenuImage(file: File | null, entryName: string) {
+  if (!file || file.size === 0) return null;
+
+  const { supabase } = await requireAdmin();
+  const extension = file.name.split(".").pop() ?? "jpg";
+  const safeName = slugifyFileName(entryName);
+  const path = `${safeName}-${Date.now()}.${extension}`;
+  const bytes = await file.arrayBuffer();
+
+  const { error } = await supabase.storage.from("menu-images").upload(path, bytes, {
+    contentType: file.type || "image/jpeg",
+    upsert: false,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data } = supabase.storage.from("menu-images").getPublicUrl(path);
+  return data.publicUrl;
+}
+
 export async function upsertMenuEntryAction(formData: FormData) {
   await requireAdmin();
 
@@ -60,6 +90,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
     benefit: formData.get("benefit") ?? "",
     mixNotes: formData.get("mixNotes") ?? "",
     categorySlug: formData.get("categorySlug") ?? "",
+    imageUrl: formData.get("imageUrl") ?? "",
     accentColor: formData.get("accentColor") ?? "#1f7a4d",
     priceIdr: formData.get("priceIdr") ?? "",
     sortOrder: formData.get("sortOrder") ?? "999",
@@ -67,6 +98,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
   });
 
   const isColdPressed = parsed.sectionSlug === "cold-pressed-juice";
+  const uploadedImageUrl = await uploadMenuImage(formData.get("imageFile") as File | null, parsed.name);
 
   await createMenuRepository().upsertEntry({
     id: parsed.id || undefined,
@@ -77,6 +109,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
     benefit: parsed.benefit || null,
     mixNotes: isColdPressed ? parseMixNotes(parsed.mixNotes) : {},
     categorySlug: isColdPressed ? parsed.categorySlug || null : null,
+    imageUrl: uploadedImageUrl ?? (parsed.imageUrl || null),
     accentColor: parsed.accentColor,
     priceIdr: parsed.priceIdr === "" ? null : parsed.priceIdr ?? null,
     sortOrder: parsed.sortOrder,

@@ -67,6 +67,7 @@ create table if not exists public.menu_entries (
   benefit text,
   mix_notes jsonb not null default '{}'::jsonb,
   category_slug text check (category_slug in ('roots-detox', 'vitamin-c-booster', 'hydration')),
+  image_url text,
   accent_color text not null default '#1f7a4d',
   price_idr integer,
   sort_order integer not null default 999,
@@ -84,6 +85,31 @@ grant select on public.profiles to authenticated;
 grant insert, update, delete on public.menu_sections to authenticated;
 grant insert, update, delete on public.menu_entries to authenticated;
 grant update on public.profiles to authenticated;
+
+insert into storage.buckets (id, name, public)
+values ('menu-images', 'menu-images', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "public can read menu images" on storage.objects;
+create policy "public can read menu images"
+on storage.objects for select
+using (bucket_id = 'menu-images');
+
+drop policy if exists "admins can insert menu images" on storage.objects;
+create policy "admins can insert menu images"
+on storage.objects for insert
+with check (bucket_id = 'menu-images' and private.is_admin());
+
+drop policy if exists "admins can update menu images" on storage.objects;
+create policy "admins can update menu images"
+on storage.objects for update
+using (bucket_id = 'menu-images' and private.is_admin())
+with check (bucket_id = 'menu-images' and private.is_admin());
+
+drop policy if exists "admins can delete menu images" on storage.objects;
+create policy "admins can delete menu images"
+on storage.objects for delete
+using (bucket_id = 'menu-images' and private.is_admin());
 
 create or replace function public.touch_updated_at()
 returns trigger

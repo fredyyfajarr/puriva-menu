@@ -16,6 +16,7 @@ export type MenuEntry = {
   benefit: string | null;
   mixNotes: Record<string, string>;
   categorySlug: ColdPressedCategorySlug | null;
+  imageUrl: string | null;
   accentColor: string;
   priceIdr: number | null;
   isAvailable: boolean;
@@ -47,6 +48,7 @@ export type ColdPressedGroup = {
   benefit: string | null;
   categorySlug: ColdPressedCategorySlug;
   accentColor: string;
+  imageUrl: string | null;
   priceIdr: number | null;
   mixes: string[];
   mixNotes: Record<string, string>;

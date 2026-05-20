@@ -26,6 +26,7 @@ type EntryRow = {
   benefit: string | null;
   mix_notes: Record<string, string> | null;
   category_slug: MenuEntry["categorySlug"];
+  image_url: string | null;
   accent_color: string | null;
   price_idr: number | null;
   is_available: boolean;
@@ -55,6 +56,7 @@ function fromRows(rows: SectionRow[]): MenuCatalog {
           benefit: entry.benefit,
           mixNotes: entry.mix_notes ?? {},
           categorySlug: entry.category_slug,
+          imageUrl: entry.image_url,
           accentColor: entry.accent_color ?? "#1f7a4d",
           priceIdr: entry.price_idr,
           isAvailable: entry.is_available,
@@ -100,7 +102,7 @@ export function createMenuRepository(): MenuRepository {
 
       const { data, error } = await supabase
         .from("menu_sections")
-        .select("id, slug, title, description, display_mode, price_idr, sort_order, is_active, updated_at, entries:menu_entries(id, section_id, name, ingredients, base_name, benefit, mix_notes, category_slug, accent_color, price_idr, is_available, sort_order)")
+        .select("id, slug, title, description, display_mode, price_idr, sort_order, is_active, updated_at, entries:menu_entries(id, section_id, name, ingredients, base_name, benefit, mix_notes, category_slug, image_url, accent_color, price_idr, is_available, sort_order)")
         .eq("is_active", true)
         .eq("menu_entries.is_available", true)
         .order("sort_order", { ascending: true })
@@ -115,7 +117,7 @@ export function createMenuRepository(): MenuRepository {
 
       const { data, error } = await supabase
         .from("menu_sections")
-        .select("id, slug, title, description, display_mode, price_idr, sort_order, is_active, updated_at, entries:menu_entries(id, section_id, name, ingredients, base_name, benefit, mix_notes, category_slug, accent_color, price_idr, is_available, sort_order)")
+        .select("id, slug, title, description, display_mode, price_idr, sort_order, is_active, updated_at, entries:menu_entries(id, section_id, name, ingredients, base_name, benefit, mix_notes, category_slug, image_url, accent_color, price_idr, is_available, sort_order)")
         .order("sort_order", { ascending: true })
         .order("sort_order", { referencedTable: "menu_entries", ascending: true });
 
@@ -154,6 +156,7 @@ export function createMenuRepository(): MenuRepository {
         benefit: input.benefit,
         mix_notes: input.mixNotes,
         category_slug: input.categorySlug,
+        image_url: input.imageUrl,
         accent_color: input.accentColor,
         price_idr: input.priceIdr,
         is_available: input.isAvailable ?? true,
