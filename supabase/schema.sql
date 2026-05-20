@@ -178,7 +178,7 @@ values
   ('cut-fruits', 'Cut Fruits', 'Fresh sliced fruit cups, ready to grab.', 'compact-list', 15000, 10, true),
   ('blended-juice', 'Blended Juice', 'Classic blended fruit juice, served cold.', 'compact-list', 25000, 20, true),
   ('pre-made-juice', 'Pre-made Juice', 'Bottled blends made fresh for the day.', 'recipe-cards', 30000, 30, true),
-  ('cold-pressed-juice', 'Cold-Pressed Bar', '100% murni. Tanpa air, tanpa gula, tanpa sirup.', 'grouped-by-base', 35000, 40, true)
+  ('cold-pressed-juice', 'Cold-Pressed Juice', '100% murni. Tanpa air, tanpa gula, tanpa sirup.', 'grouped-by-base', 35000, 40, true)
 on conflict (slug) do update set
   title = excluded.title,
   description = excluded.description,

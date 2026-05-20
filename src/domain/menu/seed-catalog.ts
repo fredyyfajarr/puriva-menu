@@ -34,7 +34,7 @@ const sectionMeta: Omit<MenuSection, "entries">[] = [
   {
     id: "cold-pressed-juice",
     slug: "cold-pressed-juice",
-    title: "Cold-Pressed Bar",
+    title: "Cold-Pressed Juice",
     description: "100% murni. Tanpa air, tanpa gula, tanpa sirup.",
     displayMode: "grouped-by-base",
     priceIdr: 35000,

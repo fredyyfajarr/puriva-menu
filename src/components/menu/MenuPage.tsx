@@ -23,6 +23,10 @@ const fruitBenefitNotes = [
   "Beet, carrot, celery, dan kale cocok untuk rasa clean dengan karakter sayur lebih kuat.",
 ];
 
+function getSectionTitle(section: MenuSection) {
+  return section.slug === "cold-pressed-juice" ? "Cold-Pressed Juice" : section.title;
+}
+
 export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
   const sections = catalog.sections.filter((section) => section.isActive);
 
@@ -99,7 +103,7 @@ function MenuSectionBlock({ section }: { section: MenuSection }) {
         <div>
           <h2 className="flex items-center gap-2 text-2xl font-black uppercase text-[#173f2a]">
             <Icon size={23} />
-            {section.title}
+            {getSectionTitle(section)}
           </h2>
           <p className="mt-1 text-sm text-[#687460]">{section.description}</p>
         </div>
@@ -123,7 +127,7 @@ function MenuSectionBlock({ section }: { section: MenuSection }) {
               <div className="border-t border-[#f3e5cd] px-4 pb-4 pt-3">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-[#1687a7]">Ingredients</p>
                 <p className="mt-2 text-sm font-semibold uppercase leading-6 text-[#4d5a47]">
-                  {entry.ingredients.join(" / ")}
+                  {entry.ingredients.join(" + ")}
                 </p>
               </div>
             </details>
@@ -173,7 +177,7 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
         <div>
           <h2 className="flex items-center gap-2 text-3xl font-black uppercase text-[#173f2a]">
             <Sparkles size={27} />
-            {section.title}
+            {getSectionTitle(section)}
           </h2>
           <p className="mt-1 text-sm text-[#687460]">{section.description}</p>
         </div>
@@ -230,9 +234,7 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
                           key={`${group.baseName}-${mix}`}
                           className="rounded-[8px] border border-[#ead8b7] bg-[#fff9ef] px-3 py-2"
                         >
-                          <p className="text-xs font-black uppercase text-[#4d5a47]">
-                            {group.baseName} + {mix}
-                          </p>
+                          <p className="text-xs font-black uppercase text-[#4d5a47]">+ {mix}</p>
                           {group.mixNotes[mix] ? (
                             <p className="mt-1 text-sm leading-6 text-[#687460]">{group.mixNotes[mix]}</p>
                           ) : null}
@@ -250,7 +252,6 @@ function ColdPressedSection({ section }: { section: MenuSection }) {
       <div className="mt-4 rounded-[8px] border border-[#f0ddbc] bg-[#173f2a] px-5 py-4 text-center text-white">
         <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f7d790]">All variants</p>
         <p className="mt-1 text-3xl font-black">{section.priceIdr ? formatShortIdr(section.priceIdr) : "IDR 35K"}</p>
-        <p className="mt-1 text-sm font-semibold text-[#d8eadc]">Tambah chia seeds +2K</p>
       </div>
     </section>
   );

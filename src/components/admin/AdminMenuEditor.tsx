@@ -1,9 +1,24 @@
-import { LogOut, Plus, ShieldCheck, Trash2 } from "lucide-react";
+"use client";
+
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  Pencil,
+  Plus,
+  Search,
+  ShieldCheck,
+  Trash2,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 
 import { deleteMenuEntryAction, signOutAction, toggleMenuEntryAction, upsertMenuEntryAction } from "@/app/admin/actions";
 import { coldPressedCategoryOptions, getColdPressedCategory } from "@/domain/menu/cold-pressed-categories";
 import { formatShortIdr } from "@/domain/menu/format";
-import type { MenuCatalog, MenuEntry, MenuSection } from "@/domain/menu/types";
+import type { MenuCatalog, MenuEntry, MenuSection, MenuSectionSlug } from "@/domain/menu/types";
+
+const pageSize = 8;
 
 function formatMixNotes(mixNotes: Record<string, string>) {
   return Object.entries(mixNotes)
@@ -11,105 +26,276 @@ function formatMixNotes(mixNotes: Record<string, string>) {
     .join("\n");
 }
 
+function entrySearchText(entry: MenuEntry) {
+  return [
+    entry.name,
+    entry.baseName,
+    entry.benefit,
+    entry.ingredients.join(" "),
+    Object.keys(entry.mixNotes).join(" "),
+    Object.values(entry.mixNotes).join(" "),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function getSectionTitle(section: MenuSection) {
+  return section.slug === "cold-pressed-juice" ? "Cold-Pressed Juice" : section.title;
+}
+
 export function AdminMenuEditor({ catalog, isPreviewMode }: { catalog: MenuCatalog; isPreviewMode: boolean }) {
+  const [activeSlug, setActiveSlug] = useState<MenuSectionSlug>(catalog.sections[0]?.slug ?? "cold-pressed-juice");
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+
+  const activeSection = catalog.sections.find((section) => section.slug === activeSlug) ?? catalog.sections[0];
+  const filteredEntries = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    const entries = activeSection?.entries ?? [];
+
+    if (!normalizedQuery) return entries;
+    return entries.filter((entry) => entrySearchText(entry).includes(normalizedQuery));
+  }, [activeSection, query]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredEntries.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const visibleEntries = filteredEntries.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  function changeSection(slug: MenuSectionSlug) {
+    setActiveSlug(slug);
+    setQuery("");
+    setPage(1);
+  }
+
+  function changeQuery(value: string) {
+    setQuery(value);
+    setPage(1);
+  }
+
   return (
     <main className="min-h-screen bg-[#f7f3ea] text-[#1f2f22]">
-      <div className="mx-auto w-full max-w-6xl px-5 py-6 sm:px-8">
-        <header className="mb-6 flex flex-col gap-4 border-b border-[#e5d7bd] pb-5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+      <div className="mx-auto grid w-full max-w-7xl gap-6 px-5 py-6 sm:px-8 lg:grid-cols-[260px_minmax(0,1fr)]">
+        <aside className="lg:sticky lg:top-6 lg:self-start">
+          <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#7a5d21]">
               <ShieldCheck size={15} />
               Admin
             </p>
-            <h1 className="mt-2 text-3xl font-black text-[#173f2a]">Puriva Live Menu Console</h1>
-            <p className="mt-1 text-sm text-[#65705e]">
-              Cold-pressed cukup diatur per base: isi daftar mix sekali, lalu menu pelanggan otomatis rapi.
-            </p>
+            <h1 className="mt-2 text-2xl font-black leading-tight text-[#173f2a]">Puriva Live Console</h1>
+            <p className="mt-2 text-sm leading-6 text-[#65705e]">Pilih menu di sidebar, lalu search dan edit dari table.</p>
+
+            <nav className="mt-5 grid gap-2">
+              {catalog.sections.map((section) => (
+                <button
+                  key={section.id}
+                  type="button"
+                  onClick={() => changeSection(section.slug)}
+                  className={`flex items-center justify-between rounded-[8px] border px-3 py-3 text-left text-sm font-black transition ${
+                    section.slug === activeSlug
+                      ? "border-[#173f2a] bg-[#173f2a] text-white"
+                      : "border-[#ead8b7] bg-[#fffaf0] text-[#4a4f45]"
+                  }`}
+                >
+                  <span>{getSectionTitle(section)}</span>
+                  <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">{section.entries.length}</span>
+                </button>
+              ))}
+            </nav>
+
+            {!isPreviewMode ? (
+              <form action={signOutAction} className="mt-5">
+                <button className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-[#d9c8a7] bg-white px-4 text-sm font-bold text-[#4a4f45]">
+                  <LogOut size={16} />
+                  Sign out
+                </button>
+              </form>
+            ) : null}
           </div>
-          {!isPreviewMode ? (
-            <form action={signOutAction}>
-              <button className="inline-flex h-10 items-center gap-2 rounded-[8px] border border-[#d9c8a7] bg-white px-4 text-sm font-bold text-[#4a4f45]">
-                <LogOut size={16} />
-                Sign out
-              </button>
-            </form>
+        </aside>
+
+        <div className="min-w-0">
+          {isPreviewMode ? (
+            <div className="mb-6 rounded-[8px] border border-[#e0c58f] bg-[#fff9ef] p-4 text-sm text-[#72581d]">
+              Admin mutation belum aktif karena environment Supabase belum diisi. UI ini tetap menampilkan bentuk data yang akan dipakai.
+            </div>
           ) : null}
-        </header>
 
-        {isPreviewMode ? (
-          <div className="mb-6 rounded-[8px] border border-[#e0c58f] bg-[#fff9ef] p-4 text-sm text-[#72581d]">
-            Admin mutation belum aktif karena environment Supabase belum diisi. UI ini tetap menampilkan bentuk data yang akan dipakai.
-          </div>
-        ) : null}
-
-        <section className="mb-8 rounded-[8px] border border-[#e5d7bd] bg-white p-4">
-          <h2 className="mb-4 flex items-center gap-2 text-lg font-black text-[#173f2a]">
-            <Plus size={19} />
-            Add base or menu item
-          </h2>
-          <EntryForm sections={catalog.sections} isDisabled={isPreviewMode} />
-        </section>
-
-        <div className="space-y-8">
-          {catalog.sections.map((section) => (
-            <section key={section.id}>
-              <div className="mb-3 flex items-end justify-between gap-3">
-                <div>
-                  <h2 className="text-2xl font-black text-[#173f2a]">{section.title}</h2>
-                  <p className="text-sm text-[#65705e]">
-                    {section.displayMode}
-                    {section.priceIdr ? ` - ${formatShortIdr(section.priceIdr)}` : ""}
-                  </p>
+          {activeSection ? (
+            <>
+              <section className="mb-6 rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+                <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5d21]">
+                      {activeSection.displayMode}
+                    </p>
+                    <h2 className="mt-1 text-3xl font-black text-[#173f2a]">{getSectionTitle(activeSection)}</h2>
+                    <p className="mt-1 text-sm text-[#65705e]">
+                      {activeSection.description}
+                      {activeSection.priceIdr ? ` - ${formatShortIdr(activeSection.priceIdr)}` : ""}
+                    </p>
+                  </div>
+                  <div className="relative w-full sm:max-w-xs">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7a5d21]" size={17} />
+                    <input
+                      value={query}
+                      onChange={(event) => changeQuery(event.target.value)}
+                      placeholder="Search menu, mix, benefit..."
+                      className="h-11 w-full rounded-[8px] border border-[#d9c8a7] bg-white pl-10 pr-3 text-sm font-medium"
+                    />
+                  </div>
                 </div>
-                <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-[#65705e]">{section.entries.length} items</span>
-              </div>
 
-              <div className="grid gap-3">
-                {section.entries.map((entry) => (
-                  <EntryEditor
-                    key={entry.id}
-                    entry={entry}
-                    section={section}
-                    sections={catalog.sections}
-                    isDisabled={isPreviewMode}
-                  />
-                ))}
+                <details className="group rounded-[8px] border border-[#ead8b7] bg-[#fffaf0] p-4">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+                    <span className="flex items-center gap-2 text-sm font-black uppercase text-[#173f2a]">
+                      <Plus size={17} />
+                      Add item
+                    </span>
+                    <ChevronDown className="text-[#7a5d21] transition-transform group-open:rotate-180" size={18} />
+                  </summary>
+                  <div className="mt-4 border-t border-[#ead8b7] pt-4">
+                    <EntryForm sections={catalog.sections} activeSection={activeSection} isDisabled={isPreviewMode} />
+                  </div>
+                </details>
+              </section>
+
+              <MenuTable
+                entries={visibleEntries}
+                sections={catalog.sections}
+                activeSection={activeSection}
+                isDisabled={isPreviewMode}
+              />
+
+              <div className="mt-4 flex flex-col gap-3 rounded-[8px] border border-[#e5d7bd] bg-white p-3 text-sm text-[#65705e] sm:flex-row sm:items-center sm:justify-between">
+                <p>
+                  Showing {visibleEntries.length} of {filteredEntries.length} items
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={currentPage <= 1}
+                    onClick={() => setPage((value) => Math.max(1, value - 1))}
+                    className="inline-flex h-9 items-center gap-1 rounded-[8px] border border-[#d9c8a7] px-3 font-bold disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    <ChevronLeft size={16} />
+                    Prev
+                  </button>
+                  <span className="font-bold text-[#1f2f22]">
+                    {currentPage} / {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
+                    className="inline-flex h-9 items-center gap-1 rounded-[8px] border border-[#d9c8a7] px-3 font-bold disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    Next
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
               </div>
-            </section>
-          ))}
+            </>
+          ) : null}
         </div>
       </div>
     </main>
   );
 }
 
-function EntryEditor({
-  entry,
-  section,
+function MenuTable({
+  entries,
   sections,
+  activeSection,
   isDisabled,
 }: {
-  entry: MenuEntry;
-  section: MenuSection;
+  entries: MenuEntry[];
   sections: MenuSection[];
+  activeSection: MenuSection;
   isDisabled: boolean;
 }) {
   return (
-    <details className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
-      <summary className="cursor-pointer list-none">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: entry.accentColor }} />
-              <h3 className="truncate text-base font-black text-[#1f2f22]">{entry.name}</h3>
+    <section className="overflow-hidden rounded-[8px] border border-[#e5d7bd] bg-white shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+          <thead className="bg-[#fffaf0] text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21]">
+            <tr>
+              <th className="px-4 py-3">Item</th>
+              <th className="px-4 py-3">Mix / Ingredients</th>
+              <th className="px-4 py-3">Benefit</th>
+              <th className="px-4 py-3">Price</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#f3e5cd]">
+            {entries.length > 0 ? (
+              entries.map((entry) => (
+                <TableRow
+                  key={entry.id}
+                  entry={entry}
+                  sections={sections}
+                  activeSection={activeSection}
+                  isDisabled={isDisabled}
+                />
+              ))
+            ) : (
+              <tr>
+                <td className="px-4 py-8 text-center text-[#65705e]" colSpan={6}>
+                  No menu item found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function TableRow({
+  entry,
+  sections,
+  activeSection,
+  isDisabled,
+}: {
+  entry: MenuEntry;
+  sections: MenuSection[];
+  activeSection: MenuSection;
+  isDisabled: boolean;
+}) {
+  return (
+    <>
+      <tr className="align-top">
+        <td className="px-4 py-4">
+          <div className="flex items-start gap-2">
+            <span className="mt-1.5 h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: entry.accentColor }} />
+            <div>
+              <p className="font-black uppercase text-[#1f2f22]">{entry.name}</p>
+              <p className="mt-1 text-xs text-[#65705e]">
+                {entry.baseName ? `Base ${entry.baseName}` : getSectionTitle(activeSection)}
+              </p>
             </div>
-            <p className="mt-1 text-sm text-[#65705e]">
-              {section.title}
-              {entry.benefit ? ` - ${entry.benefit}` : ""}
-              {entry.baseName ? ` - base ${entry.baseName}` : ""} - {entry.ingredients.join(", ")}
-            </p>
           </div>
-          <div className="flex shrink-0 gap-2">
+        </td>
+        <td className="max-w-xs px-4 py-4 text-[#4a4f45]">
+          <p className="line-clamp-2">{entry.ingredients.join(" + ")}</p>
+        </td>
+        <td className="max-w-xs px-4 py-4 text-[#4a4f45]">
+          <p className="line-clamp-2">{entry.benefit || "-"}</p>
+        </td>
+        <td className="px-4 py-4 font-bold text-[#1687a7]">{entry.priceIdr ? formatShortIdr(entry.priceIdr) : "-"}</td>
+        <td className="px-4 py-4">
+          <span
+            className={`rounded-full px-3 py-1 text-xs font-black ${
+              entry.isAvailable ? "bg-[#e8f5eb] text-[#16824a]" : "bg-[#fff0ed] text-[#b42318]"
+            }`}
+          >
+            {entry.isAvailable ? "Available" : "Hidden"}
+          </span>
+        </td>
+        <td className="px-4 py-4">
+          <div className="flex justify-end gap-2">
             <form action={toggleMenuEntryAction}>
               <input type="hidden" name="id" value={entry.id} />
               <input type="hidden" name="isAvailable" value={String(entry.isAvailable)} />
@@ -131,25 +317,42 @@ function EntryEditor({
               </button>
             </form>
           </div>
-        </div>
-      </summary>
-
-      <div className="mt-4 border-t border-[#eee1ca] pt-4">
-        <EntryForm sections={sections} entry={entry} isDisabled={isDisabled} />
-      </div>
-    </details>
+        </td>
+      </tr>
+      <tr>
+        <td className="bg-[#fffaf0] px-4 py-3" colSpan={6}>
+          <details className="group">
+            <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-[#173f2a]">
+              <Pencil size={15} />
+              Edit details
+              <ChevronDown className="transition-transform group-open:rotate-180" size={16} />
+            </summary>
+            <div className="mt-4 border-t border-[#ead8b7] pt-4">
+              <EntryForm sections={sections} activeSection={activeSection} entry={entry} isDisabled={isDisabled} />
+            </div>
+          </details>
+        </td>
+      </tr>
+    </>
   );
 }
 
 function EntryForm({
   sections,
+  activeSection,
   entry,
   isDisabled,
 }: {
   sections: MenuSection[];
+  activeSection: MenuSection;
   entry?: MenuEntry;
   isDisabled: boolean;
 }) {
+  const selectedSection = entry
+    ? sections.find((section) => section.slug === entry.sectionSlug) ?? activeSection
+    : activeSection;
+  const isColdPressed = selectedSection.slug === "cold-pressed-juice";
+
   return (
     <form action={upsertMenuEntryAction} className="grid gap-4 sm:grid-cols-2">
       <input type="hidden" name="id" value={entry?.id ?? ""} />
@@ -158,24 +361,24 @@ function EntryForm({
         Section
         <select
           name="sectionSlug"
-          defaultValue={entry?.sectionSlug ?? "cold-pressed-juice"}
+          defaultValue={selectedSection.slug}
           disabled={isDisabled}
           className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         >
           {sections.map((section) => (
             <option key={section.id} value={section.slug}>
-              {section.title}
+              {getSectionTitle(section)}
             </option>
           ))}
         </select>
       </label>
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
-        Base / menu name
+        {isColdPressed ? "Base name" : "Menu name"}
         <input
           name="name"
           defaultValue={entry?.name ?? ""}
-          placeholder="Celery"
+          placeholder={isColdPressed ? "Celery" : "Splash Orange"}
           disabled={isDisabled}
           className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
           required
@@ -183,11 +386,11 @@ function EntryForm({
       </label>
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45] sm:col-span-2">
-        Mix list / ingredients
+        {isColdPressed ? "Mix list" : "Ingredients"}
         <textarea
           name="ingredients"
           defaultValue={entry?.ingredients.join("\n") ?? ""}
-          placeholder={"Green Apple\nPineapple\nMelon"}
+          placeholder={isColdPressed ? "Green Apple\nPineapple\nMelon" : "Sunkist\nCarrot\nGreen Apple"}
           disabled={isDisabled}
           className="min-h-24 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
           required
@@ -199,7 +402,7 @@ function EntryForm({
         <input
           name="baseName"
           defaultValue={entry?.baseName ?? ""}
-          placeholder="Opsional. Cold-pressed otomatis pakai base/menu name."
+          placeholder="Opsional. Cold-pressed otomatis pakai base name."
           disabled={isDisabled}
           className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
@@ -210,7 +413,7 @@ function EntryForm({
         <input
           name="benefit"
           defaultValue={entry?.benefit ?? ""}
-          placeholder="Deep detox"
+          placeholder={isColdPressed ? "Deep detox" : "Vitamin C dan beta-carotene"}
           disabled={isDisabled}
           className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
@@ -249,7 +452,7 @@ function EntryForm({
           name="priceIdr"
           type="number"
           min="0"
-          defaultValue={entry?.priceIdr ?? ""}
+          defaultValue={entry?.priceIdr ?? selectedSection.priceIdr ?? ""}
           placeholder="35000"
           disabled={isDisabled}
           className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
