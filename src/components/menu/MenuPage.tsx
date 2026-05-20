@@ -1,6 +1,8 @@
 "use client";
 
 import { Apple, ChevronDown, Droplets, GlassWater, HeartPulse, Leaf, ScanLine, Sparkles, Zap } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
 import { useState } from "react";
 
 import { formatShortIdr } from "@/domain/menu/format";
@@ -26,6 +28,36 @@ const fruitBenefitNotes = [
   "Beet, carrot, celery, dan kale cocok untuk rasa clean dengan karakter sayur lebih kuat.",
 ];
 
+const heroJuiceImage =
+  "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=900&q=85";
+
+const heroFruitImages = [
+  {
+    name: "Sunkist",
+    src: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=320&q=80",
+    className: "left-4 top-6 h-24 w-24 sm:left-6 sm:top-8",
+    delay: 0,
+  },
+  {
+    name: "Pineapple",
+    src: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=320&q=80",
+    className: "right-7 top-4 h-28 w-24 sm:right-10",
+    delay: 0.5,
+  },
+  {
+    name: "Watermelon",
+    src: "https://images.unsplash.com/photo-1589984662646-e7b2e4962f18?auto=format&fit=crop&w=320&q=80",
+    className: "bottom-8 left-7 h-24 w-28 sm:left-8",
+    delay: 1,
+  },
+  {
+    name: "Green Apple",
+    src: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=320&q=80",
+    className: "bottom-10 right-5 h-24 w-24 sm:right-9",
+    delay: 1.5,
+  },
+];
+
 function getSectionTitle(section: MenuSection) {
   return section.slug === "cold-pressed-juice" ? "Cold-Pressed Juice" : section.title;
 }
@@ -39,16 +71,32 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
   const defaultSlug = sections.find((section) => section.slug === "cold-pressed-juice")?.slug ?? sections[0]?.slug ?? "cold-pressed-juice";
   const [activeSlug, setActiveSlug] = useState(defaultSlug);
   const activeSection = sections.find((section) => section.slug === activeSlug) ?? sections[0];
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <main className="min-h-screen bg-[#fff9ef] text-[#233224]">
-      <section className="border-b border-[#f0ddbc] bg-[#fffdf7]">
+      <motion.section
+        className="overflow-hidden border-b border-[#f0ddbc] bg-[#fffdf7]"
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+      >
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-3xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#e8d4ab] bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#7a5d21]">
+          <motion.div
+            className="max-w-3xl"
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            <motion.div
+              className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#e8d4ab] bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#7a5d21]"
+              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.12, duration: 0.35, ease: "easeOut" }}
+            >
               <ScanLine size={14} />
               QR Live Menu
-            </div>
+            </motion.div>
             <h1 className="text-4xl font-black leading-[0.95] text-[#173f2a] sm:text-6xl">
               {catalog.brandName}
               <span className="block text-[#d64e2a]">Cold Pressed Juice Menu</span>
@@ -57,11 +105,11 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
               100% murni dari buah dan sayur segar. Tanpa air, tanpa gula, tanpa sirup,
               dipress dingin untuk rasa yang clean dan nutrisi yang tetap hidup.
             </p>
-          </div>
+          </motion.div>
 
-          <AnimatedFruitDisplay />
+          <HeroJuiceStage />
         </div>
-      </section>
+      </motion.section>
 
       {isPreviewMode ? (
         <div className="mx-auto w-full max-w-6xl px-5 pt-4 sm:px-8">
@@ -95,50 +143,73 @@ export function MenuPage({ catalog, isPreviewMode }: MenuPageProps) {
           })}
         </div>
 
-        <div key={activeSection?.slug} className="animate-menu-panel">
-          {activeSection?.displayMode === "grouped-by-base" ? (
-            <ColdPressedSection section={activeSection} />
-          ) : activeSection ? (
-            <MenuSectionBlock section={activeSection} />
-          ) : null}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSection?.slug}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.24, ease: "easeOut" }}
+          >
+            {activeSection?.displayMode === "grouped-by-base" ? (
+              <ColdPressedSection section={activeSection} />
+            ) : activeSection ? (
+              <MenuSectionBlock section={activeSection} />
+            ) : null}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </main>
   );
 }
 
-function AnimatedFruitDisplay() {
-  const fruits = [
-    { name: "Sunkist", color: "#ea580c", delay: "0s" },
-    { name: "Pineapple", color: "#d97706", delay: "-1.5s" },
-    { name: "Guava", color: "#db2777", delay: "-3s" },
-    { name: "Melon", color: "#65a30d", delay: "-4.5s" },
-    { name: "Beet", color: "#be123c", delay: "-6s" },
-    { name: "Celery", color: "#16a34a", delay: "-7.5s" },
-  ];
+function HeroJuiceStage() {
+  const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div className="relative min-h-72 w-full max-w-sm overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#fff6e5] p-5 shadow-sm">
-      <div className="absolute left-1/2 top-1/2 h-28 w-20 -translate-x-1/2 -translate-y-1/2 rounded-b-[26px] rounded-t-[12px] border-4 border-[#173f2a] bg-white shadow-lg">
-        <div className="mx-auto mt-2 h-4 w-10 rounded-full bg-[#d7f0df]" />
-        <div className="mx-auto mt-3 h-16 w-12 rounded-b-[22px] rounded-t-[8px] bg-[#f28a2e]" />
-      </div>
-      {fruits.map((fruit, index) => (
+    <motion.div
+      className="relative min-h-[360px] w-full max-w-lg overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#173f2a] shadow-xl"
+      initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.55, delay: 0.1, ease: "easeOut" }}
+    >
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-75"
+        style={{ backgroundImage: `url("${heroJuiceImage}")` }}
+      />
+      <div className="absolute inset-0 bg-[#173f2a]/55" />
+
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-56 w-36 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-b-[34px] rounded-t-[18px] border-[5px] border-white/90 bg-white shadow-2xl"
+        animate={shouldReduceMotion ? undefined : { y: [0, -8, 0], rotate: [-1.5, 1.5, -1.5] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="mx-auto mt-3 h-5 w-20 rounded-full bg-[#d7f0df]" />
         <div
+          className="mx-auto mt-4 h-40 w-24 rounded-b-[28px] rounded-t-[10px] bg-cover bg-center"
+          style={{ backgroundImage: `url("${heroJuiceImage}")` }}
+        />
+      </motion.div>
+
+      {heroFruitImages.map((fruit) => (
+        <motion.div
           key={fruit.name}
-          className="absolute flex h-16 w-16 items-center justify-center rounded-[18px] text-center text-[10px] font-black uppercase leading-tight text-white shadow-md"
-          style={{
-            backgroundColor: fruit.color,
-            animation: `fruit-float 9s ease-in-out infinite`,
-            animationDelay: fruit.delay,
-            left: `${12 + (index % 3) * 31}%`,
-            top: `${12 + Math.floor(index / 3) * 54}%`,
+          className={`absolute overflow-hidden rounded-[8px] border border-white/50 bg-white/80 shadow-xl backdrop-blur-sm ${fruit.className}`}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 16, rotate: -4 }}
+          animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -10, 0], rotate: [-3, 3, -3] }}
+          transition={{
+            opacity: { delay: fruit.delay, duration: 0.35 },
+            y: { delay: fruit.delay, duration: 5.5, repeat: Infinity, ease: "easeInOut" },
+            rotate: { delay: fruit.delay, duration: 6, repeat: Infinity, ease: "easeInOut" },
           }}
         >
-          {fruit.name}
-        </div>
+          <Image src={fruit.src} alt={fruit.name} fill sizes="112px" className="object-cover" />
+          <span className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2 py-1 text-[10px] font-black uppercase text-[#173f2a]">
+            {fruit.name}
+          </span>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }
 
