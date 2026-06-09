@@ -17,4 +17,5 @@ A modern digital menu application designed to provide a smooth browsing experien
 - **Validation**: Zod
 - **Icons**: Lucide React
 
-Copyright build dari nama saya Fredy Fajar Adi Putra
+Copyright &copy; 2026 Fredy Fajar Adi Putra. All Rights Reserved.
+
