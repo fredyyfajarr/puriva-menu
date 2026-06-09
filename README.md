@@ -1,71 +1,20 @@
-# Puriva Live Cold Pressed Juice Menu
+# Puriva Menu
 
-Dynamic QR menu for Puriva Live, built with Next.js App Router and Supabase. The cold-pressed menu is normalized by `baseName`, so the public view shows groups like `Sunkist -> Pure, Carrot, Pineapple, Strawberry` instead of repeating `Sunkist + ...` on every line.
+A modern digital menu application designed to provide a smooth browsing experience.
 
-## Stack
+## Key Features
+- **Digital Menu**: Interactive and user-friendly display of items.
+- **Backend Integration**: Powered by Supabase for fast data retrieval and management.
+- **Server-Side Rendering**: Implements Supabase SSR for optimal performance and SEO.
+- **Animations**: Engaging UI animations handled by Motion.
+- **Robust Validation**: Secure schema validation for data with Zod.
 
-- Next.js `16.2.6`, React `19.2.4`, TypeScript, Tailwind CSS
-- Supabase Auth, Postgres, Row Level Security
-- Vercel-ready frontend and backend client usage through environment variables
+## Tech Stack
+- **Framework**: Next.js 16, React 19
+- **Backend/Database**: Supabase (`@supabase/supabase-js`, `@supabase/ssr`)
+- **Animations**: Motion
+- **Styling**: Tailwind CSS, clsx
+- **Validation**: Zod
+- **Icons**: Lucide React
 
-## Architecture
-
-```text
-src/domain/menu              business types, formatters, grouping rules, seed catalog
-src/application/menu         repository port and use-case functions
-src/infrastructure/supabase  Supabase client and repository adapter
-src/components               public QR menu and admin editor UI
-src/app                      App Router routes and Server Actions
-supabase/schema.sql          tables, RLS policies, seed data
-```
-
-The public route can render with local seed data when Supabase env is absent. Admin mutations require Supabase, Auth, and an `admin` profile role.
-
-Cold-pressed entries are stored as one row per base fruit. Example: `Celery` has `ingredients = ['Green Apple', 'Pineapple', 'Melon']`, so admins do not need to create separate rows like `Celery + Pineapple`.
-
-## Local Run
-
-```bash
-npm install
-cp .env.example .env.local
-npm run dev
-```
-
-Open:
-
-- Public QR menu: `http://localhost:3000`
-- Admin console: `http://localhost:3000/admin`
-
-## Supabase Setup
-
-1. Create a free Supabase project.
-2. Run `supabase/schema.sql` in the Supabase SQL editor.
-   - If the project was created before the latest dropdown/benefit model, run `supabase/migrations/20260520000100_apply_latest_menu_model.sql`.
-3. Create an auth user in Supabase.
-4. Promote that user:
-
-```sql
-update public.profiles
-set role = 'admin'
-where email = 'your-admin@email.com';
-```
-
-5. Add these env vars to `.env.local` and Vercel:
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-# Or, if your Supabase dashboard shows the newer key name:
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
-```
-
-Security notes:
-
-- The anon key is safe to expose because RLS owns access control.
-- Server Actions verify `profiles.role = admin` before every mutation.
-- Public users can only read active sections and available entries.
-- Admin writes use the logged-in user's Supabase session, not a service-role key.
-
-## Deploy
-
-Push the repo to GitHub, import it into Vercel, and set the same Supabase environment variables. Vercel's free tier is enough for this menu app, and Supabase free tier covers the database/auth layer for early usage.
+Copyright build dari nama saya Fredy Fajar Adi Putra
