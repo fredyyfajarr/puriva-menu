@@ -4,6 +4,8 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import { PurivaLogo } from "@/components/brand/PurivaLogo";
+
 type LandingNavProps = {
   grabFoodUrl: string;
   shopeeFoodUrl: string;
@@ -33,10 +35,10 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[#f0ddbc] bg-[#fff9ef]/95 backdrop-blur transition-shadow duration-300">
+    <header className="sticky top-0 z-30 border-b border-[#dfcfad] bg-[#fffaf0]/95 backdrop-blur transition-shadow duration-300">
       <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
-        <Link href="/" className="text-lg font-black leading-none text-[#173f2a] transition duration-200 hover:text-[#d64e2a]">
-          PURIVA
+        <Link href="/" className="transition duration-200 hover:opacity-80">
+          <PurivaLogo />
         </Link>
 
         <div className="hidden items-center gap-1 text-xs font-black uppercase tracking-[0.08em] text-[#65705e] md:flex">
@@ -107,43 +109,45 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
         }`}
         onClick={closeMenus}
       />
-      <aside
-        className={`fixed right-0 top-0 z-40 h-dvh w-[82vw] max-w-sm border-l border-[#e5d7bd] bg-[#fff9ef] p-5 pt-20 shadow-2xl transition duration-300 md:hidden ${
-          isMobileOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="grid gap-2 text-sm font-black uppercase tracking-[0.08em] text-[#173f2a]">
-          {navItems.map((item) =>
-            item.href.startsWith("/") ? (
-              <Link key={item.href} href={item.href} onClick={closeMenus} className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3">
-                {item.label}
-              </Link>
-            ) : (
-              <a key={item.href} href={item.href} onClick={closeMenus} className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3">
-                {item.label}
-              </a>
-            ),
-          )}
-        </div>
-
-        <div className="mt-6">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5d21]">Order</p>
-          <div className="mt-3 grid gap-2 text-sm font-black uppercase tracking-[0.08em]">
-            {orderItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                onClick={closeMenus}
-                className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3 text-[#173f2a]"
-              >
-                {item.label}
-              </a>
-            ))}
+      <div className="pointer-events-none fixed inset-y-0 right-0 z-40 w-full overflow-hidden md:hidden">
+        <aside
+          className={`pointer-events-auto absolute right-0 top-0 h-dvh w-[82vw] max-w-sm border-l border-[#e5d7bd] bg-[#fff9ef] p-5 pt-20 shadow-2xl transition duration-300 ${
+            isMobileOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="grid gap-2 text-sm font-black uppercase tracking-[0.08em] text-[#173f2a]">
+            {navItems.map((item) =>
+              item.href.startsWith("/") ? (
+                <Link key={item.href} href={item.href} onClick={closeMenus} className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3">
+                  {item.label}
+                </Link>
+              ) : (
+                <a key={item.href} href={item.href} onClick={closeMenus} className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3">
+                  {item.label}
+                </a>
+              ),
+            )}
           </div>
-        </div>
-      </aside>
+
+          <div className="mt-6">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5d21]">Order</p>
+            <div className="mt-3 grid gap-2 text-sm font-black uppercase tracking-[0.08em]">
+              {orderItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={closeMenus}
+                  className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3 text-[#173f2a]"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </aside>
+      </div>
     </header>
   );
 }

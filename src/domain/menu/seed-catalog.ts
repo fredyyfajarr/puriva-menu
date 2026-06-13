@@ -1,5 +1,18 @@
 import type { MenuCatalog, MenuEntry, MenuSection, MenuSectionSlug } from "./types";
 
+const grabMixImages: Record<string, Record<string, string>> = {
+  Sunkist: {
+    Carrot:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/sunkist-carrot.webp",
+    Strawberry:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/sunkist-strawberry.webp",
+  },
+  Celery: {
+    Pineapple:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/celery-pineapple.webp",
+  },
+};
+
 const sectionMeta: Omit<MenuSection, "entries">[] = [
   {
     id: "cut-fruits",
@@ -249,6 +262,7 @@ const coldPressed = coldPressedSource.map(([baseName, mixes, mixNotes, accentCol
     baseName,
     benefit,
     mixNotes,
+    mixImageUrls: grabMixImages[baseName] ?? {},
     categorySlug,
     accentColor,
     priceIdr: 35000,

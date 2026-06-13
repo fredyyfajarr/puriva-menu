@@ -1,6 +1,5 @@
-import { Leaf } from "lucide-react";
-
 import { signInAction } from "@/app/admin/actions";
+import { PurivaLogo } from "@/components/brand/PurivaLogo";
 import { getSupabaseEnv } from "@/infrastructure/supabase/env";
 
 type LoginPageProps = {
@@ -18,9 +17,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <main className="flex min-h-screen items-center justify-center bg-[#fff9ef] px-5 text-[#1f2f22]">
       <section className="w-full max-w-md rounded-[8px] border border-[#e5d7bd] bg-white p-6 shadow-sm">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-[8px] bg-[#173f2a] text-white">
-            <Leaf size={22} />
-          </div>
+          <PurivaLogo compact />
           <div>
             <h1 className="text-2xl font-black text-[#173f2a]">Admin Login</h1>
             <p className="text-sm text-[#65705e]">Puriva Live menu console</p>

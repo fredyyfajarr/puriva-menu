@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import { useId } from "react";
 
@@ -17,15 +18,52 @@ export function HeroJuiceStage({ className = "" }: HeroJuiceStageProps) {
   const floatAnimation = shouldReduceMotion ? undefined : { y: [0, -8, 0], rotate: [-1, 1, -1] };
   const bubbleAnimation = shouldReduceMotion ? undefined : { y: [0, -26], opacity: [0, 1, 0], scale: [0.7, 1, 0.8] };
   const waveAnimation = shouldReduceMotion ? undefined : { x: [-18, 18, -18] };
+  const productCards = [
+    {
+      src: "/brand/sunkist-carrot.webp",
+      label: "Sunkist + Carrot",
+      className: "left-5 top-5 rotate-[-6deg]",
+      delay: 0.15,
+    },
+    {
+      src: "/brand/sunkist-strawberry.webp",
+      label: "Sunkist + Strawberry",
+      className: "right-5 top-8 rotate-[5deg]",
+      delay: 0.3,
+    },
+    {
+      src: "/brand/celery-pineapple.webp",
+      label: "Celery + Pineapple",
+      className: "bottom-6 left-8 rotate-[4deg]",
+      delay: 0.45,
+    },
+  ];
 
   return (
     <motion.div
-      className={`relative min-h-[360px] w-full max-w-lg overflow-hidden rounded-[8px] border border-[#f0ddbc] bg-[#fff1d5] shadow-xl ${className}`}
+      className={`relative min-h-[360px] w-full max-w-lg overflow-hidden rounded-[8px] border border-[#dfcfad] bg-[#fff4dd] shadow-xl ${className}`}
       initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.55, delay: 0.1, ease: "easeOut" }}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.9),transparent_34%),radial-gradient(circle_at_78%_72%,rgba(249,115,22,0.16),transparent_30%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.9),transparent_34%),radial-gradient(circle_at_78%_72%,rgba(249,115,22,0.16),transparent_30%),linear-gradient(135deg,rgba(40,90,57,0.08),rgba(255,255,255,0))]" />
+      {productCards.map((card) => (
+        <motion.div
+          key={card.label}
+          className={`absolute z-10 hidden w-24 overflow-hidden rounded-[8px] border border-white/80 bg-white p-1 shadow-lg sm:block ${card.className}`}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 14, scale: 0.92 }}
+          animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -8, 0], scale: 1 }}
+          transition={
+            shouldReduceMotion
+              ? { duration: 0.2 }
+              : { opacity: { duration: 0.35, delay: card.delay }, y: { duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: card.delay } }
+          }
+        >
+          <div className="relative aspect-square overflow-hidden rounded-[6px]">
+            <Image src={card.src} alt={card.label} fill sizes="96px" className="object-cover" />
+          </div>
+        </motion.div>
+      ))}
       <motion.svg
         viewBox="0 0 560 390"
         role="img"

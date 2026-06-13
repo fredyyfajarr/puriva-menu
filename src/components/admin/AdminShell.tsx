@@ -19,6 +19,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 
 import { signOutAction } from "@/app/admin/actions";
+import { PurivaLogo } from "@/components/brand/PurivaLogo";
 import type { MenuSectionSlug } from "@/domain/menu/types";
 
 export type AdminProductNavItem = {
@@ -115,10 +116,13 @@ function AdminSidebarContent({
 
   return (
     <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
-      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#7a5d21]">
-        <ShieldCheck size={15} />
-        Admin
-      </p>
+      <div className="flex items-center justify-between gap-3">
+        <PurivaLogo compact />
+        <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#7a5d21]">
+          <ShieldCheck size={15} />
+          Admin
+        </p>
+      </div>
       <h1 className="mt-2 text-2xl font-black leading-tight text-[#173f2a]">Puriva Live Console</h1>
       <p className="mt-2 text-sm leading-6 text-[#65705e]">Kelola product, order, QR meja, dan payment dari satu panel.</p>
 
@@ -218,7 +222,8 @@ export function AdminShell({
 
   return (
     <main className="min-h-screen bg-[#f7f3ea] text-[#1f2f22]">
-      <div className="sticky top-0 z-40 flex justify-end border-b border-[#e5d7bd] bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-[#e5d7bd] bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
+        <PurivaLogo compact />
         <button
           type="button"
           onClick={() => setIsOpen((value) => !value)}
