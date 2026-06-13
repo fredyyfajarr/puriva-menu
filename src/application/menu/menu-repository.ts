@@ -11,6 +11,7 @@ export type MenuRepository = {
   getAdminCatalog(): Promise<MenuCatalog>;
   upsertEntry(input: MenuEntryInput): Promise<void>;
   setEntryAvailability(id: string, isAvailable: boolean): Promise<void>;
+  setMixAvailability(id: string, mix: string, isAvailable: boolean): Promise<void>;
   deleteEntry(id: string): Promise<void>;
   listSections(): Promise<MenuSection[]>;
 };

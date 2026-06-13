@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { createMenuRepository } from "@/infrastructure/supabase/menu-repository";
-import { createSupabaseServerClient, requireAdmin } from "@/infrastructure/supabase/server";
+import { createSupabaseServerClient, requireAdmin, requireStaffAccess } from "@/infrastructure/supabase/server";
 
 const entrySchema = z.object({
   id: z.string().uuid().optional().or(z.literal("")),
@@ -16,6 +16,7 @@ const entrySchema = z.object({
   benefit: z.string().trim().optional(),
   mixNotes: z.string().trim().optional(),
   mixImageUrls: z.string().trim().optional(),
+  mixAvailability: z.string().trim().optional(),
   categorySlug: z.enum(["roots-detox", "vitamin-c-booster", "hydration"]).optional().or(z.literal("")),
   imageUrl: z.string().trim().url().optional().or(z.literal("")),
   accentColor: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/),
@@ -48,6 +49,17 @@ function parseKeyValueLines(raw?: string) {
 
       return values;
     }, {});
+}
+
+function parseJsonRecord(raw?: string) {
+  if (!raw) return {};
+
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed as Record<string, boolean> : {};
+  } catch {
+    return {};
+  }
 }
 
 async function uploadMixImages(formData: FormData, rawMixImageUrls: string | undefined, entryName: string) {
@@ -108,6 +120,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
     benefit: formData.get("benefit") ?? "",
     mixNotes: formData.get("mixNotes") ?? "",
     mixImageUrls: formData.get("mixImageUrls") ?? "",
+    mixAvailability: formData.get("mixAvailability") ?? "",
     categorySlug: formData.get("categorySlug") ?? "",
     imageUrl: formData.get("imageUrl") ?? "",
     accentColor: formData.get("accentColor") ?? "#1f7a4d",
@@ -131,6 +144,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
     benefit: parsed.benefit || null,
     mixNotes: isColdPressed ? parseKeyValueLines(parsed.mixNotes) : {},
     mixImageUrls,
+    mixAvailability: isColdPressed ? parseJsonRecord(parsed.mixAvailability) : {},
     categorySlug: isColdPressed ? parsed.categorySlug || null : null,
     imageUrl: uploadedImageUrl ?? (parsed.imageUrl || null),
     accentColor: parsed.accentColor,
@@ -145,7 +159,7 @@ export async function upsertMenuEntryAction(formData: FormData) {
 }
 
 export async function toggleMenuEntryAction(formData: FormData) {
-  await requireAdmin();
+  await requireStaffAccess();
 
   const id = z.string().uuid().parse(formData.get("id"));
   const isAvailable = formData.get("isAvailable") !== "true";
@@ -153,6 +167,21 @@ export async function toggleMenuEntryAction(formData: FormData) {
   await createMenuRepository().setEntryAvailability(id, isAvailable);
   revalidatePath("/");
   revalidatePath("/admin");
+  revalidatePath("/admin/stock");
+}
+
+export async function toggleColdPressedMixAction(formData: FormData) {
+  await requireStaffAccess();
+
+  const id = z.string().uuid().parse(formData.get("id"));
+  const mix = z.string().trim().min(1).max(80).parse(formData.get("mix"));
+  const isAvailable = formData.get("isAvailable") !== "true";
+
+  await createMenuRepository().setMixAvailability(id, mix, isAvailable);
+  revalidatePath("/");
+  revalidatePath("/menu");
+  revalidatePath("/admin");
+  revalidatePath("/admin/stock");
 }
 
 export async function deleteMenuEntryAction(formData: FormData) {

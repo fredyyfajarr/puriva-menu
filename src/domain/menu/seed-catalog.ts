@@ -59,6 +59,7 @@ function entry(
     benefit: null,
     mixNotes: {},
     mixImageUrls: {},
+    mixAvailability: {},
     categorySlug: null,
     imageUrl: null,
     accentColor: "#1f7a4d",

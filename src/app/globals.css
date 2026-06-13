@@ -26,7 +26,29 @@ textarea {
   outline-color: #1687a7;
 }
 
+input,
+textarea,
+select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
 summary::-webkit-details-marker {
+  display: none;
+}
+
+.qr-print-area {
+  display: none;
+}
+
+.receipt-print-area,
+.kitchen-print-area {
   display: none;
 }
 
@@ -47,6 +69,14 @@ summary::-webkit-details-marker {
   animation: menu-panel-enter 260ms ease-out both;
 }
 
+.animate-landing-in {
+  animation: landing-in 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 2.8s ease-in-out infinite;
+}
+
 @keyframes menu-panel-enter {
   from {
     opacity: 0;
@@ -58,6 +88,29 @@ summary::-webkit-details-marker {
   }
 }
 
+@keyframes landing-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    box-shadow: 0 18px 36px rgba(23, 63, 42, 0.18);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    box-shadow: 0 24px 48px rgba(23, 63, 42, 0.28);
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -66,5 +119,112 @@ summary::-webkit-details-marker {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 1ms !important;
+  }
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .qr-print-area,
+  .qr-print-area *,
+  body[data-print-mode="receipt"] .receipt-print-area,
+  body[data-print-mode="receipt"] .receipt-print-area *,
+  body[data-print-mode="kitchen"] .kitchen-print-area,
+  body[data-print-mode="kitchen"] .kitchen-print-area * {
+    visibility: visible !important;
+  }
+
+  .qr-print-area {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12mm;
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    color: #173f2a;
+  }
+
+  .qr-print-card {
+    break-inside: avoid;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 4mm;
+    border: 1px solid #173f2a;
+    border-radius: 8px;
+    padding: 10mm;
+  }
+
+  .qr-print-image {
+    width: 58mm;
+    height: 58mm;
+  }
+
+  .qr-print-code {
+    margin: 0;
+    font-size: 24pt;
+    font-weight: 900;
+    letter-spacing: 0;
+  }
+
+  .qr-print-label {
+    margin: 0;
+    font-size: 11pt;
+    font-weight: 700;
+  }
+
+  body[data-print-mode="receipt"] .qr-print-area,
+  body[data-print-mode="kitchen"] .qr-print-area {
+    display: none !important;
+  }
+
+  body[data-print-mode="receipt"] .receipt-print-area,
+  body[data-print-mode="kitchen"] .kitchen-print-area {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    color: #111111;
+    font-family: Arial, sans-serif;
+  }
+
+  .print-paper {
+    width: 72mm;
+    margin: 0 auto;
+    padding: 4mm;
+  }
+
+  .print-paper h1 {
+    margin: 0 0 3mm;
+    font-size: 17pt;
+    font-weight: 900;
+    text-align: center;
+  }
+
+  .print-paper p {
+    margin: 0 0 2mm;
+    font-size: 10pt;
+  }
+
+  .print-total {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #111111;
+    margin-top: 3mm;
+    padding-top: 3mm;
+    font-size: 12pt;
+  }
+
+  .print-note {
+    border-top: 1px solid #111111;
+    margin-top: 3mm !important;
+    padding-top: 3mm;
+    font-weight: 700;
   }
 }

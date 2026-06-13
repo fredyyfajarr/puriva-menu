@@ -9,16 +9,19 @@ export function groupColdPressedByBase(entries: MenuEntry[]): ColdPressedGroup[]
       const existing = groups.get(baseName);
       const category = getColdPressedCategory(entry.categorySlug);
       const mixes = getMixes(entry);
+      if (!mixes.length) return groups;
 
       if (existing) {
         existing.mixes.push(...mixes);
         existing.mixNotes = { ...existing.mixNotes, ...entry.mixNotes };
         existing.mixImageUrls = { ...existing.mixImageUrls, ...entry.mixImageUrls };
+        existing.mixAvailability = { ...existing.mixAvailability, ...entry.mixAvailability };
         existing.sortOrder = Math.min(existing.sortOrder, entry.sortOrder);
         return groups;
       }
 
       groups.set(baseName, {
+        entryId: entry.id,
         baseName,
         benefit: entry.benefit,
         categorySlug: category.slug,
@@ -28,6 +31,7 @@ export function groupColdPressedByBase(entries: MenuEntry[]): ColdPressedGroup[]
         mixes,
         mixNotes: entry.mixNotes,
         mixImageUrls: entry.mixImageUrls,
+        mixAvailability: entry.mixAvailability,
         sortOrder: entry.sortOrder,
       });
 
@@ -53,12 +57,13 @@ export function getMixLabel(entry: MenuEntry) {
 export function getMixes(entry: MenuEntry) {
   const baseName = entry.baseName ?? entry.name;
   const isBaseLevelEntry = entry.name.toLowerCase() === baseName.toLowerCase();
+  const onlyAvailable = (mix: string) => entry.mixAvailability[mix] !== false;
 
   if (isBaseLevelEntry) {
-    return entry.ingredients.length > 0 ? entry.ingredients : ["Pure"];
+    return (entry.ingredients.length > 0 ? entry.ingredients : ["Pure"]).filter(onlyAvailable);
   }
 
-  return [getMixLabel(entry)];
+  return [getMixLabel(entry)].filter(onlyAvailable);
 }
 
 export function groupColdPressedByCategory(entries: MenuEntry[]) {

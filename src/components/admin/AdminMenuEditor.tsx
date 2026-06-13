@@ -4,16 +4,15 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  LogOut,
   Pencil,
   Plus,
   Search,
-  ShieldCheck,
   Trash2,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { deleteMenuEntryAction, signOutAction, toggleMenuEntryAction, upsertMenuEntryAction } from "@/app/admin/actions";
+import { deleteMenuEntryAction, toggleMenuEntryAction, upsertMenuEntryAction } from "@/app/admin/actions";
+import { AdminShell } from "@/components/admin/AdminShell";
 import { coldPressedCategoryOptions, getColdPressedCategory } from "@/domain/menu/cold-pressed-categories";
 import { formatShortIdr } from "@/domain/menu/format";
 import type { MenuCatalog, MenuEntry, MenuSection, MenuSectionSlug } from "@/domain/menu/types";
@@ -46,10 +45,27 @@ function getSectionTitle(section: MenuSection) {
   return section.slug === "cold-pressed-juice" ? "Cold-Pressed Juice" : section.title;
 }
 
-export function AdminMenuEditor({ catalog, isPreviewMode }: { catalog: MenuCatalog; isPreviewMode: boolean }) {
-  const [activeSlug, setActiveSlug] = useState<MenuSectionSlug>(catalog.sections[0]?.slug ?? "cold-pressed-juice");
+export function AdminMenuEditor({
+  catalog,
+  isPreviewMode,
+  initialSectionSlug,
+}: {
+  catalog: MenuCatalog;
+  isPreviewMode: boolean;
+  initialSectionSlug?: MenuSectionSlug;
+}) {
+  const fallbackSlug = catalog.sections[0]?.slug ?? "cold-pressed-juice";
+  const initialSlug = catalog.sections.some((section) => section.slug === initialSectionSlug)
+    ? initialSectionSlug
+    : fallbackSlug;
+  const [activeSlug, setActiveSlug] = useState<MenuSectionSlug>(initialSlug ?? fallbackSlug);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  const productItems = catalog.sections.map((section) => ({
+    slug: section.slug,
+    title: section.title,
+    count: section.entries.length,
+  }));
 
   const activeSection = catalog.sections.find((section) => section.slug === activeSlug) ?? catalog.sections[0];
   const filteredEntries = useMemo(() => {
@@ -76,47 +92,12 @@ export function AdminMenuEditor({ catalog, isPreviewMode }: { catalog: MenuCatal
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f3ea] text-[#1f2f22]">
-      <div className="mx-auto grid w-full max-w-7xl gap-6 px-5 py-6 sm:px-8 lg:grid-cols-[260px_minmax(0,1fr)]">
-        <aside className="lg:sticky lg:top-6 lg:self-start">
-          <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#7a5d21]">
-              <ShieldCheck size={15} />
-              Admin
-            </p>
-            <h1 className="mt-2 text-2xl font-black leading-tight text-[#173f2a]">Puriva Live Console</h1>
-            <p className="mt-2 text-sm leading-6 text-[#65705e]">Pilih menu di sidebar, lalu search dan edit dari table.</p>
-
-            <nav className="mt-5 grid gap-2">
-              {catalog.sections.map((section) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => changeSection(section.slug)}
-                  className={`flex items-center justify-between rounded-[8px] border px-3 py-3 text-left text-sm font-black transition ${
-                    section.slug === activeSlug
-                      ? "border-[#173f2a] bg-[#173f2a] text-white"
-                      : "border-[#ead8b7] bg-[#fffaf0] text-[#4a4f45]"
-                  }`}
-                >
-                  <span>{getSectionTitle(section)}</span>
-                  <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">{section.entries.length}</span>
-                </button>
-              ))}
-            </nav>
-
-            {!isPreviewMode ? (
-              <form action={signOutAction} className="mt-5">
-                <button className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-[#d9c8a7] bg-white px-4 text-sm font-bold text-[#4a4f45]">
-                  <LogOut size={16} />
-                  Sign out
-                </button>
-              </form>
-            ) : null}
-          </div>
-        </aside>
-
-        <div className="min-w-0">
+    <AdminShell
+      productItems={productItems}
+      activeProductSlug={activeSlug}
+      onProductSelect={changeSection}
+      isPreviewMode={isPreviewMode}
+    >
           {isPreviewMode ? (
             <div className="mb-6 rounded-[8px] border border-[#e0c58f] bg-[#fff9ef] p-4 text-sm text-[#72581d]">
               Admin mutation belum aktif karena environment Supabase belum diisi. UI ini tetap menampilkan bentuk data yang akan dipakai.
@@ -199,9 +180,7 @@ export function AdminMenuEditor({ catalog, isPreviewMode }: { catalog: MenuCatal
               </div>
             </>
           ) : null}
-        </div>
-      </div>
-    </main>
+    </AdminShell>
   );
 }
 
@@ -218,8 +197,25 @@ function MenuTable({
 }) {
   return (
     <section className="overflow-hidden rounded-[8px] border border-[#e5d7bd] bg-white shadow-sm">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[1000px] border-collapse text-left text-sm">
+      <div className="grid gap-3 p-3 md:hidden">
+        {entries.length > 0 ? (
+          entries.map((entry) => (
+            <MobileEntryCard
+              key={entry.id}
+              entry={entry}
+              sections={sections}
+              activeSection={activeSection}
+              isDisabled={isDisabled}
+            />
+          ))
+        ) : (
+          <div className="rounded-[8px] border border-dashed border-[#d9c8a7] bg-[#fffaf0] p-4 text-center text-sm text-[#65705e]">
+            No menu item found.
+          </div>
+        )}
+      </div>
+      <div className="hidden overflow-x-auto md:block">
+        <table className="w-full min-w-[860px] border-collapse text-left text-sm">
           <thead className="bg-[#fffaf0] text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21]">
             <tr>
               <th className="px-4 py-3">Photo</th>
@@ -256,6 +252,101 @@ function MenuTable({
   );
 }
 
+function EntryPhoto({ entry, activeSection }: { entry: MenuEntry; activeSection: MenuSection }) {
+  const photoUrl =
+    activeSection.slug === "cold-pressed-juice" && Object.values(entry.mixImageUrls)[0]
+      ? Object.values(entry.mixImageUrls)[0]
+      : entry.imageUrl;
+
+  return (
+    <div className="h-16 w-20 shrink-0 overflow-hidden rounded-[8px] border border-[#ead8b7] bg-[#fffaf0]">
+      {photoUrl ? (
+        <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url("${photoUrl}")` }} />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center text-[10px] font-black uppercase text-[#9a7a35]">
+          No image
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileEntryCard({
+  entry,
+  sections,
+  activeSection,
+  isDisabled,
+}: {
+  entry: MenuEntry;
+  sections: MenuSection[];
+  activeSection: MenuSection;
+  isDisabled: boolean;
+}) {
+  return (
+    <article className="min-w-0 rounded-[8px] border border-[#f0ddbc] bg-white p-3">
+      <div className="flex gap-3">
+        <EntryPhoto entry={entry} activeSection={activeSection} />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <p className="break-words font-black uppercase text-[#1f2f22]">{entry.name}</p>
+              <p className="mt-1 text-xs text-[#65705e]">
+                {entry.baseName ? `Base ${entry.baseName}` : getSectionTitle(activeSection)}
+              </p>
+            </div>
+            <span
+              className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${
+                entry.isAvailable ? "bg-[#e8f5eb] text-[#16824a]" : "bg-[#fff0ed] text-[#b42318]"
+              }`}
+            >
+              {entry.isAvailable ? "On" : "Off"}
+            </span>
+          </div>
+          <p className="mt-2 break-words text-sm text-[#4a4f45]">{entry.ingredients.join(" + ")}</p>
+          {entry.benefit ? <p className="mt-1 break-words text-xs leading-5 text-[#65705e]">{entry.benefit}</p> : null}
+          <p className="mt-2 text-sm font-black text-[#1687a7]">
+            {entry.priceIdr ? formatShortIdr(entry.priceIdr) : "-"}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <form action={toggleMenuEntryAction}>
+          <input type="hidden" name="id" value={entry.id} />
+          <input type="hidden" name="isAvailable" value={String(entry.isAvailable)} />
+          <button
+            disabled={isDisabled}
+            className="h-9 w-full rounded-[8px] border border-[#d9c8a7] px-3 text-xs font-bold text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            {entry.isAvailable ? "Hide" : "Show"}
+          </button>
+        </form>
+        <form action={deleteMenuEntryAction}>
+          <input type="hidden" name="id" value={entry.id} />
+          <button
+            disabled={isDisabled}
+            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-[8px] border border-[#efc5bd] px-3 text-xs font-bold text-[#b42318] disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            <Trash2 size={14} />
+            Delete
+          </button>
+        </form>
+      </div>
+
+      <details className="group mt-3 rounded-[8px] bg-[#fffaf0] p-3">
+        <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-[#173f2a]">
+          <Pencil size={15} />
+          Edit details
+          <ChevronDown className="ml-auto transition-transform group-open:rotate-180" size={16} />
+        </summary>
+        <div className="mt-3 border-t border-[#ead8b7] pt-3">
+          <EntryForm sections={sections} activeSection={activeSection} entry={entry} isDisabled={isDisabled} />
+        </div>
+      </details>
+    </article>
+  );
+}
+
 function TableRow({
   entry,
   sections,
@@ -271,23 +362,7 @@ function TableRow({
     <>
       <tr className="align-top">
         <td className="px-4 py-4">
-          <div className="h-16 w-20 overflow-hidden rounded-[8px] border border-[#ead8b7] bg-[#fffaf0]">
-            {activeSection.slug === "cold-pressed-juice" && Object.values(entry.mixImageUrls)[0] ? (
-              <div
-                className="h-full w-full bg-cover bg-center"
-                style={{ backgroundImage: `url("${Object.values(entry.mixImageUrls)[0]}")` }}
-              />
-            ) : entry.imageUrl ? (
-              <div
-                className="h-full w-full bg-cover bg-center"
-                style={{ backgroundImage: `url("${entry.imageUrl}")` }}
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-[10px] font-black uppercase text-[#9a7a35]">
-                No image
-              </div>
-            )}
-          </div>
+          <EntryPhoto entry={entry} activeSection={activeSection} />
         </td>
         <td className="px-4 py-4">
           <div className="flex items-start gap-2">
@@ -379,6 +454,7 @@ function EntryForm({
     <form action={upsertMenuEntryAction} className="grid gap-4 sm:grid-cols-2">
       <input type="hidden" name="id" value={entry?.id ?? ""} />
       <input type="hidden" name="imageUrl" value={entry?.imageUrl ?? ""} />
+      <input type="hidden" name="mixAvailability" value={JSON.stringify(entry?.mixAvailability ?? {})} />
 
       <label className="grid gap-1 text-sm font-bold text-[#4a4f45]">
         Section

@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 import { getSupabaseEnv } from "./env";
@@ -30,7 +31,24 @@ export async function createSupabaseServerClient() {
   });
 }
 
-export async function requireAdmin() {
+export function createSupabaseServiceClient() {
+  const { url, serviceRoleKey, isServiceConfigured } = getSupabaseEnv();
+
+  if (!isServiceConfigured || !url || !serviceRoleKey) {
+    return null;
+  }
+
+  return createClient(url, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+
+export type AdminRole = "owner" | "admin" | "staff";
+
+export async function requireRole(allowedRoles: AdminRole[]) {
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
@@ -52,9 +70,17 @@ export async function requireAdmin() {
     .eq("id", user.id)
     .single();
 
-  if (profileError || profile?.role !== "admin") {
+  if (profileError || !allowedRoles.includes(profile?.role as AdminRole)) {
     throw new Error("Forbidden.");
   }
 
-  return { supabase, user };
+  return { supabase, user, role: profile.role as AdminRole };
+}
+
+export async function requireAdmin() {
+  return requireRole(["owner", "admin"]);
+}
+
+export async function requireStaffAccess() {
+  return requireRole(["owner", "admin", "staff"]);
 }

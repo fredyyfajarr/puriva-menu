@@ -1,8 +1,9 @@
 import type { MenuEntryInput, MenuRepository } from "@/application/menu/menu-repository";
 import { seedCatalog } from "@/domain/menu/seed-catalog";
+import { applyPublicStockRules } from "@/domain/menu/stock-availability";
 import type { MenuCatalog, MenuEntry, MenuSection, MenuSectionSlug } from "@/domain/menu/types";
 
-import { createSupabaseServerClient } from "./server";
+import { createSupabaseServerClient, createSupabaseServiceClient } from "./server";
 
 type SectionRow = {
   id: string;
@@ -26,6 +27,7 @@ type EntryRow = {
   benefit: string | null;
   mix_notes: Record<string, string> | null;
   mix_image_urls: Record<string, string> | null;
+  mix_availability: Record<string, boolean> | null;
   category_slug: MenuEntry["categorySlug"];
   image_url: string | null;
   accent_color: string | null;
@@ -57,6 +59,7 @@ function fromRows(rows: SectionRow[]): MenuCatalog {
           benefit: entry.benefit,
           mixNotes: entry.mix_notes ?? {},
           mixImageUrls: entry.mix_image_urls ?? {},
+          mixAvailability: entry.mix_availability ?? {},
           categorySlug: entry.category_slug,
           imageUrl: entry.image_url,
           accentColor: entry.accent_color ?? "#1f7a4d",
@@ -89,6 +92,7 @@ function createPreviewRepository(): MenuRepository {
     },
     upsertEntry: mutationUnavailable,
     setEntryAvailability: mutationUnavailable,
+    setMixAvailability: mutationUnavailable,
     deleteEntry: mutationUnavailable,
     async listSections() {
       return seedCatalog.sections;
@@ -99,19 +103,18 @@ function createPreviewRepository(): MenuRepository {
 export function createMenuRepository(): MenuRepository {
   return {
     async getCatalog() {
-      const supabase = await createSupabaseServerClient();
+      const supabase = createSupabaseServiceClient() ?? await createSupabaseServerClient();
       if (!supabase) return createPreviewRepository().getCatalog();
 
       const { data, error } = await supabase
         .from("menu_sections")
-        .select("id, slug, title, description, display_mode, price_idr, sort_order, is_active, updated_at, entries:menu_entries(id, section_id, name, ingredients, base_name, benefit, mix_notes, mix_image_urls, category_slug, image_url, accent_color, price_idr, is_available, sort_order)")
+        .select("id, slug, title, description, display_mode, price_idr, sort_order, is_active, updated_at, entries:menu_entries(id, section_id, name, ingredients, base_name, benefit, mix_notes, mix_image_urls, mix_availability, category_slug, image_url, accent_color, price_idr, is_available, sort_order)")
         .eq("is_active", true)
-        .eq("menu_entries.is_available", true)
         .order("sort_order", { ascending: true })
         .order("sort_order", { referencedTable: "menu_entries", ascending: true });
 
       if (error || !data) return createPreviewRepository().getCatalog();
-      return fromRows(data as SectionRow[]);
+      return applyPublicStockRules(fromRows(data as SectionRow[]));
     },
     async getAdminCatalog() {
       const supabase = await createSupabaseServerClient();
@@ -119,7 +122,7 @@ export function createMenuRepository(): MenuRepository {
 
       const { data, error } = await supabase
         .from("menu_sections")
-        .select("id, slug, title, description, display_mode, price_idr, sort_order, is_active, updated_at, entries:menu_entries(id, section_id, name, ingredients, base_name, benefit, mix_notes, mix_image_urls, category_slug, image_url, accent_color, price_idr, is_available, sort_order)")
+        .select("id, slug, title, description, display_mode, price_idr, sort_order, is_active, updated_at, entries:menu_entries(id, section_id, name, ingredients, base_name, benefit, mix_notes, mix_image_urls, mix_availability, category_slug, image_url, accent_color, price_idr, is_available, sort_order)")
         .order("sort_order", { ascending: true })
         .order("sort_order", { referencedTable: "menu_entries", ascending: true });
 
@@ -158,6 +161,7 @@ export function createMenuRepository(): MenuRepository {
         benefit: input.benefit,
         mix_notes: input.mixNotes,
         mix_image_urls: input.mixImageUrls,
+        mix_availability: input.mixAvailability,
         category_slug: input.categorySlug,
         image_url: input.imageUrl,
         accent_color: input.accentColor,
@@ -173,6 +177,26 @@ export function createMenuRepository(): MenuRepository {
       }
 
       const { error } = await supabase.from("menu_entries").insert(payload);
+      if (error) throw error;
+    },
+    async setMixAvailability(id: string, mix: string, isAvailable: boolean) {
+      const supabase = await createSupabaseServerClient();
+      if (!supabase) return createPreviewRepository().setMixAvailability(id, mix, isAvailable);
+
+      const { data, error: readError } = await supabase
+        .from("menu_entries")
+        .select("mix_availability")
+        .eq("id", id)
+        .single();
+
+      if (readError) throw readError;
+
+      const current = (data?.mix_availability ?? {}) as Record<string, boolean>;
+      const { error } = await supabase
+        .from("menu_entries")
+        .update({ mix_availability: { ...current, [mix]: isAvailable } })
+        .eq("id", id);
+
       if (error) throw error;
     },
     async setEntryAvailability(id: string, isAvailable: boolean) {

@@ -1,110 +1,147 @@
+# Puriva F&B Automation
+
+Web app untuk Puriva Live Cold Pressed & Blended Juice. Sistem ini mencakup landing page promosi, menu publik, QR self-order per meja, order management kasir, stock control, invoice/reporting, dashboard analytics, audit log, dan fondasi payment QRIS Midtrans sandbox.
+
+## Stack
+
+- Next.js `16.2.6`, React `19.2.4`, TypeScript, Tailwind CSS
+- Supabase Auth, Postgres, Storage, Row Level Security
+- Midtrans sandbox integration untuk dynamic QRIS
+- Recharts untuk dashboard analytics
+- PDFKit untuk invoice/report PDF
+- Playwright untuk E2E desktop dan mobile
+
+## Architecture
+
 ```text
-                    .__               
-______  __ _________|__|__  _______   
-\____ \|  |  \_  __ \  \  \/ /\__  \  
-|  |_> >  |  /|  | \/  |\   /  / __ \_
-|   __/|____/ |__|  |__| \_/  (____  /
-|__|                               \/ 
+src/domain              business types and pure domain rules
+src/application         repository ports and use-case boundaries
+src/infrastructure      Supabase and Midtrans adapters
+src/components          UI components by feature area
+src/app                 Next.js App Router routes, API routes, Server Actions
+supabase/migrations     database migration history
+supabase/schema.sql     current schema snapshot and seed data
+e2e                     Playwright end-to-end tests
 ```
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="NextJS" />
-  <img src="https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=3ECF8E" alt="Supabase" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
-</div>
+Menu cold-pressed disimpan satu row per base fruit. Contoh: `Sunkist` punya list mix seperti `Green Apple`, `Pineapple`, `Strawberry`, dan `Original`, sehingga admin tidak perlu membuat item berulang seperti `Sunkist + Pineapple`.
 
-## 📑 Table of Contents
-- [About The Project](#about-the-project)
-- [Key Features](#key-features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License / Copyright](#license--copyright)
+## Core Features
 
-## 🚀 About The Project
+- Landing page promosi outlet, Maps, GrabFood, GoFood, ShopeeFood, dan WhatsApp bulk order.
+- Public menu di `/menu`.
+- QR self-order per meja dengan token random, bukan URL mudah ditebak seperti `/table/T01`.
+- Cart order dengan payment method: Cash, EDC BCA, QRIS Static, Dynamic QRIS.
+- POS kasir / order management untuk progress order.
+- Dining table admin untuk generate/regenerate QR meja.
+- Stock control:
+  - Cold-pressed base yang habis akan mematikan original base itu.
+  - Mix cold-pressed lain yang memakai ingredient habis ikut diblok.
+  - Cut fruit dan blended juice yang memakai ingredient live habis ikut diblok.
+  - Pre-made juice tidak auto ikut habis karena dianggap finished stock di kulkas.
+- Invoice harian, mingguan, bulanan, tahunan, dan selected date.
+- Dashboard analytics untuk BI awal.
+- Audit log untuk aksi penting admin/system.
+- Staff role hanya melihat fitur yang diizinkan: order management, stock control, invoice.
 
-**Puriva Menu** is a sleek, highly responsive digital menu and catalog management platform designed to elevate the modern dining or service experience. By offering a digital-first approach to presenting items, descriptions, and pricing, this application allows customers to intuitively browse offerings via beautiful, fluid interfaces built on top of Next.js 16 and React 19.
-
-The backbone of Puriva Menu is powered by Supabase, enabling robust backend-as-a-service functionalities including instantaneous database queries via `@supabase/ssr` and reliable schema validations utilizing `zod`. Furthermore, the integration of Framer Motion (via `motion`) ensures that every page transition and interaction feels premium, snappy, and perfectly polished.
-
-## ✨ Key Features
-- **Dynamic Digital Catalog**: A fast, deeply optimized front-end enabling users to browse menus and categories instantly without page reloads.
-- **Server-Side Data Sync**: Implements `@supabase/ssr` for pristine server-side rendering and secure data hydration directly to the client.
-- **Premium Fluid Animations**: Employs `motion` for physics-based, 60fps UI animations that guide user interactions seamlessly.
-- **Robust Type Safety & Validation**: Zod validators paired closely with TypeScript interfaces ensure absolute runtime and compile-time data integrity.
-- **Modern Utility Styling**: Designed completely with Tailwind CSS v4 to guarantee high maintainability and consistent design language across all components.
-
-## 🛠 Tech Stack
-- **Framework:** Next.js (16.x)
-- **Library:** React (19.x)
-- **Database & Auth:** Supabase / `@supabase/ssr`
-- **Styling:** Tailwind CSS (v4)
-- **Animations:** Motion
-- **Validation:** Zod
-
-## 📂 Project Structure
-```text
-puriva-menu/
-├── src/                  # Core application components and Next.js App Router
-├── supabase/             # Supabase schema definitions and local config
-├── public/               # Public assets and graphical resources
-├── next.config.ts        # Next.js architectural configurations
-├── eslint.config.mjs     # Strict linting configurations
-└── package.json          # Project automation scripts and dependencies
-```
-
-## 🏁 Getting Started
-
-### Prerequisites
-- **Node.js**: v18.x or newer
-- **npm**: v9.x or newer
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/fredyyfajarr/puriva-menu.git
-   ```
-2. Navigate into the directory:
-   ```bash
-   cd puriva-menu
-   ```
-3. Install the dependencies:
-   ```bash
-   npm install
-   ```
-4. Setup environment configurations by copying `.env.example` (if provided) or manually linking your Supabase credentials to `.env.local`.
-
-## 💻 Usage
-
-To run the application locally in development mode:
+## Local Run
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-You can view the digital menu interface by visiting `http://localhost:3000`. To ensure type safety before deployment, use:
+Open:
+
+- Landing page: `http://localhost:3000`
+- Public menu: `http://localhost:3000/menu`
+- Admin console: `http://localhost:3000/admin`
+- QR table order: gunakan QR token dari halaman admin tables
+
+## Environment
 
 ```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+MIDTRANS_IS_PRODUCTION=false
+MIDTRANS_SERVER_KEY=
+MIDTRANS_NOTIFICATION_URL=
+```
+
+`SUPABASE_SERVICE_ROLE_KEY` hanya boleh dipakai server-side dan local test. Jangan expose ke browser.
+
+Untuk Midtrans lokal, gunakan ngrok untuk webhook:
+
+```bash
+MIDTRANS_NOTIFICATION_URL=https://your-ngrok-url.ngrok-free.app/api/payments/midtrans/webhook
+```
+
+URL yang sama dipasang di Midtrans Sandbox Dashboard pada Payment Notification URL.
+
+## Supabase Workflow
+
+Link project:
+
+```bash
+supabase link --project-ref <project-ref>
+```
+
+Push migration:
+
+```bash
+supabase db push
+```
+
+Jika PowerShell memblokir script Supabase, gunakan:
+
+```bash
+supabase.cmd db push
+```
+
+Remote dev project saat ini memakai migration history sampai:
+
+```text
+20260523000200_live_ingredient_stock_guard
+```
+
+Migration ini menambahkan guard database agar order live-made tidak masuk ketika raw ingredient terkait sudah sold out.
+
+## Tests
+
+```bash
+npm run test
+npm run lint
 npm run typecheck
-```
-
-For production builds:
-```bash
 npm run build
-npm run start
+npm run test:e2e
 ```
 
-## 🤝 Contributing
+E2E memakai Playwright dan membutuhkan `.env.local` yang berisi Supabase URL + service role key. Test akan mengambil active dining table token dari dev DB dan submit order cash test.
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Install browser Playwright jika belum ada:
 
-## 📄 License / Copyright
+```bash
+npx playwright install chromium
+```
 
-Copyright &copy; 2026 Fredy Fajar Adi Putra. All Rights Reserved.
+## Deploy
+
+Push ke GitHub, import repo ke Vercel, lalu isi environment variables yang sama. Untuk production payment, ganti Midtrans ke production mode dan gunakan webhook URL domain Vercel:
+
+```text
+https://your-domain.vercel.app/api/payments/midtrans/webhook
+```
+
+## Security Notes
+
+- Public table order memakai QR token random dan lookup RPC, bukan predictable table code.
+- Admin route dilindungi Supabase Auth + profile role.
+- Staff role dibatasi di UI dan server authorization.
+- Public read dibatasi oleh RLS dan service-side catalog filtering.
+- Payment webhook memvalidasi status, amount, dan provider reference sebelum update order.
+- Service role hanya dipakai untuk server-side trusted operations.
