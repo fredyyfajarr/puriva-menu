@@ -99,17 +99,17 @@ export function AdminMenuEditor({
       isPreviewMode={isPreviewMode}
     >
           {isPreviewMode ? (
-            <div className="mb-6 rounded-[8px] border border-[#e0c58f] bg-[#fff9ef] p-4 text-sm text-[#72581d]">
+            <div className="mb-6 rounded-[8px] border border-[#c9decf] bg-[#f6fbf7] p-4 text-sm text-[#2f6b46]">
               Admin mutation belum aktif karena environment Supabase belum diisi. UI ini tetap menampilkan bentuk data yang akan dipakai.
             </div>
           ) : null}
 
           {activeSection ? (
             <>
-              <section className="mb-6 rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+              <section className="mb-6 rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
                 <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5d21]">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-[#2f6b46]">
                       {activeSection.displayMode}
                     </p>
                     <h2 className="mt-1 text-3xl font-black text-[#173f2a]">{getSectionTitle(activeSection)}</h2>
@@ -119,25 +119,25 @@ export function AdminMenuEditor({
                     </p>
                   </div>
                   <div className="relative w-full sm:max-w-xs">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7a5d21]" size={17} />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#2f6b46]" size={17} />
                     <input
                       value={query}
                       onChange={(event) => changeQuery(event.target.value)}
                       placeholder="Search menu, mix, benefit..."
-                      className="h-11 w-full rounded-[8px] border border-[#d9c8a7] bg-white pl-10 pr-3 text-sm font-medium"
+                      className="h-11 w-full rounded-[8px] border border-[#c9decf] bg-white pl-10 pr-3 text-sm font-medium"
                     />
                   </div>
                 </div>
 
-                <details className="group rounded-[8px] border border-[#ead8b7] bg-[#fffaf0] p-4">
+                <details className="group rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-4">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
                     <span className="flex items-center gap-2 text-sm font-black uppercase text-[#173f2a]">
                       <Plus size={17} />
                       Add item
                     </span>
-                    <ChevronDown className="text-[#7a5d21] transition-transform group-open:rotate-180" size={18} />
+                    <ChevronDown className="text-[#2f6b46] transition-transform group-open:rotate-180" size={18} />
                   </summary>
-                  <div className="mt-4 border-t border-[#ead8b7] pt-4">
+                  <div className="mt-4 border-t border-[#dbe8dd] pt-4">
                     <EntryForm sections={catalog.sections} activeSection={activeSection} isDisabled={isPreviewMode} />
                   </div>
                 </details>
@@ -150,7 +150,7 @@ export function AdminMenuEditor({
                 isDisabled={isPreviewMode}
               />
 
-              <div className="mt-4 flex flex-col gap-3 rounded-[8px] border border-[#e5d7bd] bg-white p-3 text-sm text-[#65705e] sm:flex-row sm:items-center sm:justify-between">
+              <div className="mt-4 flex flex-col gap-3 rounded-[8px] border border-[#dbe8dd] bg-white p-3 text-sm text-[#65705e] sm:flex-row sm:items-center sm:justify-between">
                 <p>
                   Showing {visibleEntries.length} of {filteredEntries.length} items
                 </p>
@@ -159,7 +159,7 @@ export function AdminMenuEditor({
                     type="button"
                     disabled={currentPage <= 1}
                     onClick={() => setPage((value) => Math.max(1, value - 1))}
-                    className="inline-flex h-9 items-center gap-1 rounded-[8px] border border-[#d9c8a7] px-3 font-bold disabled:cursor-not-allowed disabled:opacity-45"
+                    className="inline-flex h-9 items-center gap-1 rounded-[8px] border border-[#c9decf] px-3 font-bold disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     <ChevronLeft size={16} />
                     Prev
@@ -171,7 +171,7 @@ export function AdminMenuEditor({
                     type="button"
                     disabled={currentPage >= totalPages}
                     onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
-                    className="inline-flex h-9 items-center gap-1 rounded-[8px] border border-[#d9c8a7] px-3 font-bold disabled:cursor-not-allowed disabled:opacity-45"
+                    className="inline-flex h-9 items-center gap-1 rounded-[8px] border border-[#c9decf] px-3 font-bold disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     Next
                     <ChevronRight size={16} />
@@ -196,7 +196,7 @@ function MenuTable({
   isDisabled: boolean;
 }) {
   return (
-    <section className="overflow-hidden rounded-[8px] border border-[#e5d7bd] bg-white shadow-sm">
+    <section className="overflow-hidden rounded-[8px] border border-[#dbe8dd] bg-white shadow-sm">
       <div className="grid gap-3 p-3 md:hidden">
         {entries.length > 0 ? (
           entries.map((entry) => (
@@ -209,14 +209,14 @@ function MenuTable({
             />
           ))
         ) : (
-          <div className="rounded-[8px] border border-dashed border-[#d9c8a7] bg-[#fffaf0] p-4 text-center text-sm text-[#65705e]">
+          <div className="rounded-[8px] border border-dashed border-[#c9decf] bg-[#f6fbf7] p-4 text-center text-sm text-[#65705e]">
             No menu item found.
           </div>
         )}
       </div>
       <div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[860px] border-collapse text-left text-sm">
-          <thead className="bg-[#fffaf0] text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21]">
+          <thead className="bg-[#f6fbf7] text-xs font-black uppercase tracking-[0.12em] text-[#2f6b46]">
             <tr>
               <th className="px-4 py-3">Photo</th>
               <th className="px-4 py-3">Item</th>
@@ -227,7 +227,7 @@ function MenuTable({
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#f3e5cd]">
+          <tbody className="divide-y divide-[#dbe8dd]">
             {entries.length > 0 ? (
               entries.map((entry) => (
                 <TableRow
@@ -259,11 +259,11 @@ function EntryPhoto({ entry, activeSection }: { entry: MenuEntry; activeSection:
       : entry.imageUrl;
 
   return (
-    <div className="h-16 w-20 shrink-0 overflow-hidden rounded-[8px] border border-[#ead8b7] bg-[#fffaf0]">
+    <div className="h-16 w-20 shrink-0 overflow-hidden rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7]">
       {photoUrl ? (
         <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url("${photoUrl}")` }} />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-[10px] font-black uppercase text-[#9a7a35]">
+        <div className="flex h-full w-full items-center justify-center text-[10px] font-black uppercase text-[#2f6b46]">
           No image
         </div>
       )}
@@ -283,7 +283,7 @@ function MobileEntryCard({
   isDisabled: boolean;
 }) {
   return (
-    <article className="min-w-0 rounded-[8px] border border-[#f0ddbc] bg-white p-3">
+    <article className="min-w-0 rounded-[8px] border border-[#dbe8dd] bg-white p-3">
       <div className="flex gap-3">
         <EntryPhoto entry={entry} activeSection={activeSection} />
         <div className="min-w-0 flex-1">
@@ -304,7 +304,7 @@ function MobileEntryCard({
           </div>
           <p className="mt-2 break-words text-sm text-[#4a4f45]">{entry.ingredients.join(" + ")}</p>
           {entry.benefit ? <p className="mt-1 break-words text-xs leading-5 text-[#65705e]">{entry.benefit}</p> : null}
-          <p className="mt-2 text-sm font-black text-[#1687a7]">
+          <p className="mt-2 text-sm font-black text-[#2f8f5b]">
             {entry.priceIdr ? formatShortIdr(entry.priceIdr) : "-"}
           </p>
         </div>
@@ -316,7 +316,7 @@ function MobileEntryCard({
           <input type="hidden" name="isAvailable" value={String(entry.isAvailable)} />
           <button
             disabled={isDisabled}
-            className="h-9 w-full rounded-[8px] border border-[#d9c8a7] px-3 text-xs font-bold text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
+            className="h-9 w-full rounded-[8px] border border-[#c9decf] px-3 text-xs font-bold text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
           >
             {entry.isAvailable ? "Hide" : "Show"}
           </button>
@@ -333,13 +333,13 @@ function MobileEntryCard({
         </form>
       </div>
 
-      <details className="group mt-3 rounded-[8px] bg-[#fffaf0] p-3">
+      <details className="group mt-3 rounded-[8px] bg-[#f6fbf7] p-3">
         <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-[#173f2a]">
           <Pencil size={15} />
           Edit details
           <ChevronDown className="ml-auto transition-transform group-open:rotate-180" size={16} />
         </summary>
-        <div className="mt-3 border-t border-[#ead8b7] pt-3">
+        <div className="mt-3 border-t border-[#dbe8dd] pt-3">
           <EntryForm sections={sections} activeSection={activeSection} entry={entry} isDisabled={isDisabled} />
         </div>
       </details>
@@ -381,7 +381,7 @@ function TableRow({
         <td className="max-w-xs px-4 py-4 text-[#4a4f45]">
           <p className="line-clamp-2">{entry.benefit || "-"}</p>
         </td>
-        <td className="px-4 py-4 font-bold text-[#1687a7]">{entry.priceIdr ? formatShortIdr(entry.priceIdr) : "-"}</td>
+        <td className="px-4 py-4 font-bold text-[#2f8f5b]">{entry.priceIdr ? formatShortIdr(entry.priceIdr) : "-"}</td>
         <td className="px-4 py-4">
           <span
             className={`rounded-full px-3 py-1 text-xs font-black ${
@@ -398,7 +398,7 @@ function TableRow({
               <input type="hidden" name="isAvailable" value={String(entry.isAvailable)} />
               <button
                 disabled={isDisabled}
-                className="h-9 rounded-[8px] border border-[#d9c8a7] px-3 text-xs font-bold text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
+                className="h-9 rounded-[8px] border border-[#c9decf] px-3 text-xs font-bold text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
               >
                 {entry.isAvailable ? "Hide" : "Show"}
               </button>
@@ -417,14 +417,14 @@ function TableRow({
         </td>
       </tr>
       <tr>
-        <td className="bg-[#fffaf0] px-4 py-3" colSpan={7}>
+        <td className="bg-[#f6fbf7] px-4 py-3" colSpan={7}>
           <details className="group">
             <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-black uppercase tracking-[0.12em] text-[#173f2a]">
               <Pencil size={15} />
               Edit details
               <ChevronDown className="transition-transform group-open:rotate-180" size={16} />
             </summary>
-            <div className="mt-4 border-t border-[#ead8b7] pt-4">
+            <div className="mt-4 border-t border-[#dbe8dd] pt-4">
               <EntryForm sections={sections} activeSection={activeSection} entry={entry} isDisabled={isDisabled} />
             </div>
           </details>
@@ -462,7 +462,7 @@ function EntryForm({
           name="sectionSlug"
           defaultValue={selectedSection.slug}
           disabled={isDisabled}
-          className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-11 rounded-[8px] border border-[#c9decf] bg-white px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         >
           {sections.map((section) => (
             <option key={section.id} value={section.slug}>
@@ -479,7 +479,7 @@ function EntryForm({
           defaultValue={entry?.name ?? ""}
           placeholder={isColdPressed ? "Celery" : "Splash Orange"}
           disabled={isDisabled}
-          className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-11 rounded-[8px] border border-[#c9decf] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
           required
         />
       </label>
@@ -492,7 +492,7 @@ function EntryForm({
             type="file"
             accept="image/png,image/jpeg,image/webp"
             disabled={isDisabled}
-            className="rounded-[8px] border border-[#d9c8a7] bg-white px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+            className="rounded-[8px] border border-[#c9decf] bg-white px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
           />
           {entry?.imageUrl ? (
             <span className="text-xs font-medium text-[#65705e]">Existing image will stay unless a new file is uploaded.</span>
@@ -507,7 +507,7 @@ function EntryForm({
           defaultValue={entry?.ingredients.join("\n") ?? ""}
           placeholder={isColdPressed ? "Green Apple\nPineapple\nMelon" : "Sunkist\nCarrot\nGreen Apple"}
           disabled={isDisabled}
-          className="min-h-24 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="min-h-24 rounded-[8px] border border-[#c9decf] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
           required
         />
       </label>
@@ -519,7 +519,7 @@ function EntryForm({
           defaultValue={entry?.baseName ?? ""}
           placeholder="Opsional. Cold-pressed otomatis pakai base name."
           disabled={isDisabled}
-          className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-11 rounded-[8px] border border-[#c9decf] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
       </label>
 
@@ -530,7 +530,7 @@ function EntryForm({
           defaultValue={entry?.benefit ?? ""}
           placeholder={isColdPressed ? "Deep detox" : "Vitamin C dan beta-carotene"}
           disabled={isDisabled}
-          className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-11 rounded-[8px] border border-[#c9decf] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
       </label>
 
@@ -541,12 +541,12 @@ function EntryForm({
           defaultValue={entry ? formatMixNotes(entry.mixNotes) : ""}
           placeholder={"Green Apple: rasa lebih crisp dan segar\nPineapple: bantu pencernaan dan rasa tropical"}
           disabled={isDisabled}
-          className="min-h-28 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="min-h-28 rounded-[8px] border border-[#c9decf] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
       </label>
 
       {isColdPressed ? (
-        <div className="grid gap-3 rounded-[8px] border border-[#ead8b7] bg-white p-3 sm:col-span-2">
+        <div className="grid gap-3 rounded-[8px] border border-[#dbe8dd] bg-white p-3 sm:col-span-2">
           <div>
             <p className="text-sm font-black text-[#173f2a]">Mix photos</p>
             <p className="mt-1 text-xs font-medium leading-5 text-[#65705e]">
@@ -563,7 +563,7 @@ function EntryForm({
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
                     disabled={isDisabled}
-                    className="rounded-[8px] border border-[#d9c8a7] bg-[#fffaf0] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+                    className="rounded-[8px] border border-[#c9decf] bg-[#f6fbf7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
                   />
                   {entry.mixImageUrls[mix] ? (
                     <span className="font-medium text-[#65705e]">Existing image will stay unless replaced.</span>
@@ -572,7 +572,7 @@ function EntryForm({
               ))}
             </div>
           ) : (
-            <p className="rounded-[8px] bg-[#fffaf0] px-3 py-2 text-xs font-semibold leading-5 text-[#7a5d21]">
+            <p className="rounded-[8px] bg-[#f6fbf7] px-3 py-2 text-xs font-semibold leading-5 text-[#2f6b46]">
               Create base dulu, lalu edit item itu untuk upload foto per mix.
             </p>
           )}
@@ -583,7 +583,7 @@ function EntryForm({
               defaultValue={entry ? formatMixNotes(entry.mixImageUrls) : ""}
               placeholder={"Original: https://...\nGreen Apple: https://..."}
               disabled={isDisabled}
-              className="min-h-20 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+              className="min-h-20 rounded-[8px] border border-[#c9decf] px-3 py-2 font-medium disabled:cursor-not-allowed disabled:opacity-45"
             />
           </label>
         </div>
@@ -597,7 +597,7 @@ function EntryForm({
           name="categorySlug"
           defaultValue={getColdPressedCategory(entry?.categorySlug).slug}
           disabled={isDisabled}
-          className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-11 rounded-[8px] border border-[#c9decf] bg-white px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         >
           {coldPressedCategoryOptions.map((category) => (
             <option key={category.slug} value={category.slug}>
@@ -616,7 +616,7 @@ function EntryForm({
           defaultValue={entry?.priceIdr ?? selectedSection.priceIdr ?? ""}
           placeholder="35000"
           disabled={isDisabled}
-          className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-11 rounded-[8px] border border-[#c9decf] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
       </label>
 
@@ -627,7 +627,7 @@ function EntryForm({
           type="color"
           defaultValue={entry?.accentColor ?? "#1f7a4d"}
           disabled={isDisabled}
-          className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-2 disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-11 rounded-[8px] border border-[#c9decf] bg-white px-2 disabled:cursor-not-allowed disabled:opacity-45"
         />
       </label>
 
@@ -639,7 +639,7 @@ function EntryForm({
           min="0"
           defaultValue={entry?.sortOrder ?? 999}
           disabled={isDisabled}
-          className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
+          className="h-11 rounded-[8px] border border-[#c9decf] px-3 font-medium disabled:cursor-not-allowed disabled:opacity-45"
         />
       </label>
 

@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     width: 512,
     color: {
       dark: "#173f2a",
-      light: "#fffdf7",
+      light: "#ffffff",
     },
   });
 

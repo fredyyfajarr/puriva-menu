@@ -53,15 +53,15 @@ function SidebarGroup({
   defaultOpen?: boolean;
 }) {
   return (
-    <details className="group rounded-[8px] border border-[#ead8b7] bg-[#fffaf0]" open={defaultOpen}>
+    <details className="group rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7]" open={defaultOpen}>
       <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-3 text-sm font-black uppercase text-[#173f2a]">
         <span className="inline-flex items-center gap-2">
           {icon}
           {title}
         </span>
-        <ChevronDown className="text-[#7a5d21] transition-transform group-open:rotate-180" size={16} />
+        <ChevronDown className="text-[#2f6b46] transition-transform group-open:rotate-180" size={16} />
       </summary>
-      <div className="grid gap-2 border-t border-[#ead8b7] p-2">{children}</div>
+      <div className="grid gap-2 border-t border-[#dbe8dd] p-2">{children}</div>
     </details>
   );
 }
@@ -115,15 +115,18 @@ function AdminSidebarContent({
   );
 
   return (
-    <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+    <div className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <PurivaLogo compact />
-        <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#7a5d21]">
+        <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#2f6b46]">
           <ShieldCheck size={15} />
           Admin
         </p>
       </div>
-      <h1 className="mt-2 text-2xl font-black leading-tight text-[#173f2a]">Puriva Live Console</h1>
+      <h1 className="mt-2 text-2xl font-black leading-tight text-[#173f2a]">
+        <PurivaLogo className="mb-1 text-xl" />
+        Live Console
+      </h1>
       <p className="mt-2 text-sm leading-6 text-[#65705e]">Kelola product, order, QR meja, dan payment dari satu panel.</p>
 
       <nav className="mt-5 grid gap-3">
@@ -132,7 +135,7 @@ function AdminSidebarContent({
             {productItems.map((item) => {
               const isActive = pathname === "/admin" && item.slug === activeProductSlug;
               const className = `flex items-center justify-between rounded-[8px] border px-3 py-3 text-left text-sm font-black transition ${
-                isActive ? "border-[#173f2a] bg-[#173f2a] text-white" : "border-[#ead8b7] bg-white text-[#4a4f45]"
+                isActive ? "border-[#173f2a] bg-[#173f2a] text-white" : "border-[#dbe8dd] bg-white text-[#4a4f45]"
               }`;
 
               if (onProductSelect) {
@@ -183,7 +186,7 @@ function AdminSidebarContent({
                 className={`flex items-center justify-between rounded-[8px] border px-3 py-3 text-left text-sm font-black transition hover:-translate-y-0.5 ${
                   isActive
                     ? "border-[#173f2a] bg-[#173f2a] text-white"
-                    : "border-[#ead8b7] bg-white text-[#4a4f45]"
+                    : "border-[#dbe8dd] bg-white text-[#4a4f45]"
                 }`}
               >
                 <span className="inline-flex items-center gap-2">
@@ -198,7 +201,7 @@ function AdminSidebarContent({
 
       {!isPreviewMode ? (
         <form action={signOutAction} className="mt-5">
-          <button className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-[#d9c8a7] bg-white px-4 text-sm font-bold text-[#4a4f45]">
+          <button className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-[#c9decf] bg-white px-4 text-sm font-bold text-[#4a4f45]">
             <LogOut size={16} />
             Sign out
           </button>
@@ -222,12 +225,12 @@ export function AdminShell({
 
   return (
     <main className="min-h-screen bg-[#f7f3ea] text-[#1f2f22]">
-      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-[#e5d7bd] bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-[#dbe8dd] bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
         <PurivaLogo compact />
         <button
           type="button"
           onClick={() => setIsOpen((value) => !value)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#d9c8a7] bg-white text-[#173f2a]"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#c9decf] bg-white text-[#173f2a]"
           aria-expanded={isOpen}
           aria-label={isOpen ? "Close admin menu" : "Open admin menu"}
         >

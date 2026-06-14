@@ -65,7 +65,7 @@ export function OrderStatusPanel({ initialStatus, orderId, tableToken }: OrderSt
 
   if (!status) {
     return (
-      <div className="mt-4 rounded-[8px] border border-[#f0ddbc] bg-[#fffaf0] p-4 text-sm font-bold text-[#7a5d21]">
+      <div className="mt-4 rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-4 text-sm font-bold text-[#2f6b46]">
         Status live belum tersedia. Order tetap sudah masuk ke kasir.
       </div>
     );
@@ -76,13 +76,13 @@ export function OrderStatusPanel({ initialStatus, orderId, tableToken }: OrderSt
 
   return (
     <div className="mt-5 space-y-3 text-left">
-      <div className="grid gap-2 rounded-[8px] border border-[#f0ddbc] bg-[#fffaf0] p-4">
+      <div className="grid gap-2 rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-4">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#7a5d21]">Live status</p>
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#2f6b46]">Live status</p>
           <button
             type="button"
             onClick={refresh}
-            className="inline-flex h-8 items-center gap-2 rounded-[8px] border border-[#d9c8a7] bg-white px-3 text-xs font-black text-[#173f2a]"
+            className="inline-flex h-8 items-center gap-2 rounded-[8px] border border-[#c9decf] bg-white px-3 text-xs font-black text-[#173f2a]"
           >
             {isRefreshing ? <Loader2 className="animate-spin" size={14} /> : <RefreshCw size={14} />}
             Refresh
@@ -108,10 +108,10 @@ export function OrderStatusPanel({ initialStatus, orderId, tableToken }: OrderSt
 
       {qrImageUrl ? (
         <div className="rounded-[8px] border border-[#173f2a] bg-white p-4 text-center">
-          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#7a5d21]">Dynamic QRIS</p>
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#2f6b46]">Dynamic QRIS</p>
           <div
             aria-label="Dynamic QRIS payment code"
-            className="mx-auto mt-3 h-64 w-64 rounded-[8px] border border-[#f0ddbc] bg-contain bg-center bg-no-repeat p-2"
+            className="mx-auto mt-3 h-64 w-64 rounded-[8px] border border-[#dbe8dd] bg-contain bg-center bg-no-repeat p-2"
             style={{ backgroundImage: `url("${qrImageUrl}")` }}
           />
           <p className="mt-3 text-xs font-semibold leading-5 text-[#65705e]">
@@ -121,13 +121,13 @@ export function OrderStatusPanel({ initialStatus, orderId, tableToken }: OrderSt
             href={qrImageUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-flex h-9 items-center justify-center rounded-[8px] border border-[#d9c8a7] px-3 text-xs font-black uppercase text-[#173f2a]"
+            className="mt-3 inline-flex h-9 items-center justify-center rounded-[8px] border border-[#c9decf] px-3 text-xs font-black uppercase text-[#173f2a]"
           >
             Buka QR image
           </a>
         </div>
       ) : order.paymentMethod === "dynamic_qris" ? (
-        <div className="rounded-[8px] border border-[#f0ddbc] bg-[#fffaf0] p-4 text-sm font-bold text-[#7a5d21]">
+        <div className="rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-4 text-sm font-bold text-[#2f6b46]">
           Dynamic QRIS dipilih, tapi QR belum tersedia. Pastikan Midtrans sandbox env sudah diisi.
         </div>
       ) : null}

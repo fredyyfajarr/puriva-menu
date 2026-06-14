@@ -4,6 +4,7 @@ import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { createTableOrderAction } from "@/app/table/actions";
+import { PurivaLogo } from "@/components/brand/PurivaLogo";
 import { formatShortIdr } from "@/domain/menu/format";
 import { groupColdPressedByCategory } from "@/domain/menu/group-cold-pressed";
 import type { MenuCatalog, MenuEntry, MenuSection } from "@/domain/menu/types";
@@ -60,7 +61,7 @@ function MenuThumb({
   const sizeClass = size === "sm" ? "h-14 w-14" : "h-16 w-16";
 
   return (
-    <div className={`${sizeClass} shrink-0 overflow-hidden rounded-[8px] border border-[#ead8b7] bg-[#fffaf0]`}>
+    <div className={`${sizeClass} shrink-0 overflow-hidden rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7]`}>
       {imageUrl ? (
         <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url("${imageUrl}")` }} />
       ) : (
@@ -148,7 +149,7 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
   }
 
   return (
-    <main className="min-h-screen bg-[#fff9ef] text-[#233224]">
+    <main className="min-h-screen bg-[#f6fbf7] text-[#233224]">
       <a
         href="#cart-panel"
         className="fixed bottom-4 right-4 z-30 inline-flex h-12 items-center gap-2 rounded-[8px] bg-[#173f2a] px-4 text-sm font-black uppercase text-white shadow-lg lg:hidden"
@@ -157,19 +158,24 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
         Cart {cartCount > 0 ? `(${cartCount})` : ""}
       </a>
 
-      <section className="border-b border-[#f0ddbc] bg-[#fffdf7]">
+      <section className="border-b border-[#dbe8dd] bg-[#ffffff]">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-6 sm:px-6">
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-[#9a7a35]">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2f6b46]">
             QR order {table.label}
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-4xl font-black leading-none text-[#173f2a]">Puriva Live Order</h1>
+              <h1 className="text-4xl font-black leading-none text-[#173f2a]">
+                <span className="mb-1 block">
+                  <PurivaLogo className="text-2xl" />
+                </span>
+                Live Order
+              </h1>
               <p className="mt-2 text-sm leading-6 text-[#5f6d58]">
                 Pilih menu, submit order, lalu pesanan masuk ke kasir.
               </p>
             </div>
-            <div className="rounded-[8px] border border-[#f0ddbc] bg-white px-4 py-3 text-sm font-black text-[#173f2a]">
+            <div className="rounded-[8px] border border-[#dbe8dd] bg-white px-4 py-3 text-sm font-black text-[#173f2a]">
               {table.code}
             </div>
           </div>
@@ -190,13 +196,13 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
                   <h2 className="text-2xl font-black uppercase text-[#173f2a]">{getSectionTitle(section)}</h2>
                   <p className="mt-1 text-sm text-[#687460]">{section.description}</p>
                 </div>
-                {section.priceIdr ? <p className="shrink-0 text-xl font-black text-[#1687a7]">{formatShortIdr(section.priceIdr)}</p> : null}
+                {section.priceIdr ? <p className="shrink-0 text-xl font-black text-[#2f8f5b]">{formatShortIdr(section.priceIdr)}</p> : null}
               </div>
 
               {section.slug === "cold-pressed-juice" ? (
                 <div className="space-y-3">
                   {groupColdPressedByCategory(section.entries).map((category) => (
-                    <div key={category.slug} className="rounded-[8px] border border-[#f0ddbc] bg-white p-4 shadow-sm">
+                    <div key={category.slug} className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
                       <h3 className="text-lg font-black uppercase text-[#173f2a]">{category.title}</h3>
                       <div className="mt-3 grid gap-4 xl:grid-cols-2">
                         {category.groups.map((group) => {
@@ -204,16 +210,16 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
                           if (!entry) return null;
 
                           return (
-                            <div key={group.baseName} className="min-w-0 rounded-[8px] border border-[#f3e5cd] bg-[#fffaf0] p-3">
+                            <div key={group.baseName} className="min-w-0 rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-3">
                               <p className="break-words font-black uppercase text-[#233224]">{group.baseName} Base</p>
-                              <p className="mt-1 text-xs font-bold text-[#7a5d21]">{group.benefit}</p>
+                              <p className="mt-1 text-xs font-bold text-[#2f6b46]">{group.benefit}</p>
                               <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
                                 {group.mixes.map((mix) => (
                                   <button
                                     key={mix}
                                     type="button"
                                     onClick={() => addItem(entry, section, mix)}
-                                    className="grid min-h-20 min-w-0 grid-cols-[56px_minmax(0,1fr)] items-center gap-3 overflow-hidden rounded-[8px] border border-[#d9c8a7] bg-white p-2 text-left text-xs font-black uppercase text-[#173f2a] transition hover:-translate-y-0.5 hover:shadow-sm"
+                                    className="grid min-h-20 min-w-0 grid-cols-[56px_minmax(0,1fr)] items-center gap-3 overflow-hidden rounded-[8px] border border-[#c9decf] bg-white p-2 text-left text-xs font-black uppercase text-[#173f2a] transition hover:-translate-y-0.5 hover:shadow-sm"
                                   >
                                     <MenuThumb
                                       imageUrl={getMenuImage(entry, mix)}
@@ -245,14 +251,14 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
                   {section.entries.map((entry) => (
-                    <div key={entry.id} className="rounded-[8px] border border-[#f0ddbc] bg-white p-4 shadow-sm">
+                    <div key={entry.id} className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex min-w-0 gap-3">
                           <MenuThumb imageUrl={getMenuImage(entry)} accentColor={entry.accentColor} label={entry.name} />
                           <div className="min-w-0">
                           <p className="font-black uppercase text-[#233224]">{entry.name}</p>
                           {entry.benefit ? <p className="mt-1 text-sm leading-6 text-[#687460]">{entry.benefit}</p> : null}
-                          <p className="mt-2 text-xs font-black uppercase tracking-[0.12em] text-[#1687a7]">
+                          <p className="mt-2 text-xs font-black uppercase tracking-[0.12em] text-[#2f8f5b]">
                             {formatShortIdr(getPrice(entry, section))}
                           </p>
                           </div>
@@ -275,7 +281,7 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
         </div>
 
         <aside id="cart-panel" className="scroll-mt-5 lg:sticky lg:top-5 lg:self-start">
-          <form action={createTableOrderAction} className="flex flex-col rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm lg:max-h-[calc(100vh-2.5rem)]">
+          <form action={createTableOrderAction} className="flex flex-col rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm lg:max-h-[calc(100vh-2.5rem)]">
             <input type="hidden" name="tableToken" value={table.qrToken} />
             <input type="hidden" name="itemsJson" value={itemsJson} />
             <div className="shrink-0 flex items-center justify-between gap-3">
@@ -283,18 +289,18 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
                 <ShoppingBag size={20} />
                 Cart
               </h2>
-              <p className="text-sm font-black text-[#1687a7]">{formatShortIdr(subtotal)}</p>
+              <p className="text-sm font-black text-[#2f8f5b]">{formatShortIdr(subtotal)}</p>
             </div>
 
             <div className="mt-4 grid gap-4 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-1">
               <div className="grid gap-2">
                 {cart.length > 0 ? (
                   cart.map((item) => (
-                    <div key={item.key} className="rounded-[8px] border border-[#f3e5cd] bg-[#fffaf0] p-3">
+                    <div key={item.key} className="rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-3">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <p className="text-sm font-black uppercase text-[#233224]">{item.itemName}</p>
-                          {item.variantLabel ? <p className="mt-1 text-xs font-bold text-[#7a5d21]">{item.variantLabel}</p> : null}
+                          {item.variantLabel ? <p className="mt-1 text-xs font-bold text-[#2f6b46]">{item.variantLabel}</p> : null}
                         </div>
                         <button
                           type="button"
@@ -307,29 +313,29 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
                       </div>
                       <div className="mt-3 flex items-center justify-between gap-3">
                         <div className="inline-flex items-center gap-2">
-                          <button type="button" onClick={() => changeQuantity(item.key, -1)} className="h-8 w-8 rounded-[8px] border border-[#d9c8a7]">
+                          <button type="button" onClick={() => changeQuantity(item.key, -1)} className="h-8 w-8 rounded-[8px] border border-[#c9decf]">
                             <Minus className="mx-auto" size={14} />
                           </button>
                           <span className="w-6 text-center text-sm font-black">{item.quantity}</span>
-                          <button type="button" onClick={() => changeQuantity(item.key, 1)} className="h-8 w-8 rounded-[8px] border border-[#d9c8a7]">
+                          <button type="button" onClick={() => changeQuantity(item.key, 1)} className="h-8 w-8 rounded-[8px] border border-[#c9decf]">
                             <Plus className="mx-auto" size={14} />
                           </button>
                         </div>
-                        <p className="text-sm font-black text-[#1687a7]">{formatShortIdr(item.quantity * item.unitPriceIdr)}</p>
+                        <p className="text-sm font-black text-[#2f8f5b]">{formatShortIdr(item.quantity * item.unitPriceIdr)}</p>
                       </div>
                       <label className="mt-3 grid gap-1 text-xs font-bold text-[#4a4f45]">
                         Note item
                         <input
                           value={item.notes ?? ""}
                           onChange={(event) => updateItemNote(item.key, event.target.value)}
-                          className="h-9 rounded-[8px] border border-[#d9c8a7] bg-white px-3 text-sm font-medium"
+                          className="h-9 rounded-[8px] border border-[#c9decf] bg-white px-3 text-sm font-medium"
                           placeholder="Contoh: less ice, tanpa lemon"
                         />
                       </label>
                     </div>
                   ))
                 ) : (
-                  <div className="rounded-[8px] border border-dashed border-[#d9c8a7] bg-[#fffaf0] p-4 text-sm text-[#687460]">
+                  <div className="rounded-[8px] border border-dashed border-[#c9decf] bg-[#f6fbf7] p-4 text-sm text-[#687460]">
                     Cart masih kosong.
                   </div>
                 )}
@@ -341,7 +347,7 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
                   name="customerName"
                   value={customerName}
                   onChange={(event) => setCustomerName(event.target.value)}
-                  className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium"
+                  className="h-11 rounded-[8px] border border-[#c9decf] px-3 font-medium"
                   placeholder="Nama customer"
                 />
               </label>
@@ -352,7 +358,7 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
                   name="notes"
                   value={notes}
                   onChange={(event) => setNotes(event.target.value)}
-                  className="min-h-20 rounded-[8px] border border-[#d9c8a7] px-3 py-2 font-medium"
+                  className="min-h-20 rounded-[8px] border border-[#c9decf] px-3 py-2 font-medium"
                   placeholder="Contoh: antar ke meja, less ice"
                 />
               </label>
@@ -366,7 +372,7 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
                       className={`grid cursor-pointer gap-1 rounded-[8px] border p-3 transition ${
                         paymentMethod === option.value
                           ? "border-[#173f2a] bg-[#eff8f1]"
-                          : "border-[#d9c8a7] bg-white"
+                          : "border-[#c9decf] bg-white"
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -396,7 +402,7 @@ export function TableOrderPage({ catalog, table, errorMessage }: TableOrderPageP
           </form>
         </aside>
       </div>
-      <footer className="border-t border-[#f0ddbc] px-5 py-6 text-center text-xs font-bold text-[#65705e]">
+      <footer className="border-t border-[#dbe8dd] px-5 py-6 text-center text-xs font-bold text-[#65705e]">
         Copyright 2026. Made with love by fredyyfajarr.
       </footer>
     </main>

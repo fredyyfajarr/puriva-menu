@@ -1,15 +1,138 @@
 import type { MenuCatalog, MenuEntry, MenuSection, MenuSectionSlug } from "./types";
 
-const grabMixImages: Record<string, Record<string, string>> = {
-  Sunkist: {
-    Carrot:
-      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/sunkist-carrot.webp",
+const grabEntryImages: Partial<Record<MenuSectionSlug, Record<string, string>>> = {
+  "cut-fruits": {
+    Sunkist:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cut-fruits/cut-sunkist.webp",
+    Melon:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cut-fruits/cut-melon.webp",
+    Pineapple:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cut-fruits/cut-pineapple.webp",
+    "Dragon Fruit":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cut-fruits/cut-dragon-fruit.webp",
+    Watermelon:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cut-fruits/cut-watermelon.webp",
+    "Green Apple":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cut-fruits/cut-green-apple.webp",
+  },
+  "blended-juice": {
+    Avocado:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-avocado-juice.webp",
+    Sunkist:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-sunkist-juice.webp",
+    Melon:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-melon-juice.webp",
+    Pineapple:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-pineapple-juice.webp",
+    Guava:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-guava-juice.webp",
+    "Dragon Fruit":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-dragon-fruit-juice.webp",
+    Watermelon:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-watermelon-juice.webp",
     Strawberry:
-      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/sunkist-strawberry.webp",
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-strawberry-juice.webp",
+    Mango:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/blended-juice/premium-mango-juice.webp",
+  },
+  "pre-made-juice": {
+    "Splash Orange":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/pre-made-juice/splash-orange.webp",
+    "Pink Heart":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/pre-made-juice/pink-heart.webp",
+    "Yellow Glow":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/pre-made-juice/yellow-glow.webp",
+    "Berry Happy":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/pre-made-juice/berry-happy.webp",
+    "Red Love":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/pre-made-juice/red-love.webp",
+    "Maroon Beet":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/pre-made-juice/maroon-beat.webp",
+    "Green Forest":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/pre-made-juice/green-forest.webp",
+  },
+};
+
+const grabMixImages: Record<string, Record<string, string>> = {
+  Carrot: {
+    Original:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/carrot-juice.webp",
+    Celery:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/carrot-celery-juice.webp",
+    "Green Apple":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/carrot-green-apple-juice.webp",
+  },
+  Beet: {
+    Carrot:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/beet-carrot-juice.webp",
+    Pineapple:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/beet-pineapple-juice.webp",
+    "Green Apple":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/beet-green-apple-juice.webp",
   },
   Celery: {
+    Original:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/celery-juice.webp",
+    "Green Apple":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/celery-green-apple-juice.webp",
     Pineapple:
-      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/celery-pineapple.webp",
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/celery-pineapple-juice.webp",
+    Melon:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/celery-melon-juice.webp",
+  },
+  Sunkist: {
+    Original:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/sunkist-juice.webp",
+    Carrot:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/sunkist-carrot-juice.webp",
+    Pineapple:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/sunkist-pineapple-juice.webp",
+    Strawberry:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/sunkist-strawberry-juice.webp",
+  },
+  Pineapple: {
+    Melon:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/pineapple-melon-juice.webp",
+    Sunkist:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/pineapple-sunkist-juice.webp",
+    "Green Apple":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/pineapple-green-apple-juice.webp",
+    Strawberry:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/pineapple-strawberry-juice.webp",
+  },
+  Guava: {
+    Sunkist:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/guava-sunkist-juice.webp",
+    Pineapple:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/guava-pineapple-juice.webp",
+    "Green Apple":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/guava-green-apple-juice.webp",
+    Beet:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/guava-beet-juice.webp",
+  },
+  Watermelon: {
+    Original:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/watermelon-juice.webp",
+    Sunkist:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/watermelon-sunkist-juice.webp",
+    Pineapple:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/watermelon-pineapple-juice.webp",
+    Strawberry:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/watermelon-strawberry-juice.webp",
+  },
+  Melon: {
+    Original:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/melon-juice.webp",
+    Sunkist:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/melon-sunkist-juice.webp",
+    Strawberry:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/melon-strawberry-juice.webp",
+    "Green Apple":
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/melon-green-apple-juice.webp",
+  },
+  Cucumber: {
+    Original:
+      "https://plzvbabkwgxxhmrpqvgg.supabase.co/storage/v1/object/public/menu-images/grab/cold-pressed-juice/cucumber-juice.webp",
   },
 };
 
@@ -74,7 +197,7 @@ function entry(
     mixImageUrls: {},
     mixAvailability: {},
     categorySlug: null,
-    imageUrl: null,
+    imageUrl: grabEntryImages[sectionSlug]?.[name] ?? null,
     accentColor: "#1f7a4d",
     priceIdr: null,
     isAvailable: true,

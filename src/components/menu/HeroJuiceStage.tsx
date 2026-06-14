@@ -40,11 +40,8 @@ export function HeroJuiceStage({ className = "" }: HeroJuiceStageProps) {
   ];
 
   return (
-    <motion.div
-      className={`relative min-h-[360px] w-full max-w-lg overflow-hidden rounded-[8px] border border-[#dfcfad] bg-[#fff4dd] shadow-xl ${className}`}
-      initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.96, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.55, delay: 0.1, ease: "easeOut" }}
+    <div
+      className={`relative min-h-[360px] w-full max-w-lg overflow-hidden rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] shadow-xl ${className}`}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.9),transparent_34%),radial-gradient(circle_at_78%_72%,rgba(249,115,22,0.16),transparent_30%),linear-gradient(135deg,rgba(40,90,57,0.08),rgba(255,255,255,0))]" />
       {productCards.map((card) => (
@@ -64,14 +61,11 @@ export function HeroJuiceStage({ className = "" }: HeroJuiceStageProps) {
           </div>
         </motion.div>
       ))}
-      <motion.svg
+      <svg
         viewBox="0 0 560 390"
         role="img"
         aria-label="Animated fruit juice illustration"
         className="absolute inset-0 h-full w-full"
-        initial={shouldReduceMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.35 }}
       >
         <defs>
           <linearGradient id={orangeId} x1="0" x2="1" y1="0" y2="1">
@@ -96,7 +90,7 @@ export function HeroJuiceStage({ className = "" }: HeroJuiceStageProps) {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           opacity="0.38"
         >
-          <path d="M52 80 C150 42, 210 114, 314 70 S480 50, 524 100" fill="none" stroke="#f7d790" strokeWidth="16" strokeLinecap="round" />
+          <path d="M52 80 C150 42, 210 114, 314 70 S480 50, 524 100" fill="none" stroke="#bde5c8" strokeWidth="16" strokeLinecap="round" />
           <path d="M44 308 C138 252, 234 332, 338 286 S478 252, 532 316" fill="none" stroke="#c7e68c" strokeWidth="14" strokeLinecap="round" />
         </motion.g>
 
@@ -164,7 +158,7 @@ export function HeroJuiceStage({ className = "" }: HeroJuiceStageProps) {
             transition={{ duration: 2.8, repeat: Infinity, delay: bubble * 0.28, ease: "easeOut" }}
           />
         ))}
-      </motion.svg>
-    </motion.div>
+      </svg>
+    </div>
   );
 }

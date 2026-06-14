@@ -35,7 +35,7 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[#dfcfad] bg-[#fffaf0]/95 backdrop-blur transition-shadow duration-300">
+    <header className="sticky top-0 z-30 border-b border-[#dbe8dd] bg-[#f6fbf7]/95 backdrop-blur transition-shadow duration-300">
       <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
         <Link href="/" className="transition duration-200 hover:opacity-80">
           <PurivaLogo />
@@ -47,7 +47,7 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
               <Link
                 key={item.href}
                 href={item.href}
-                className="whitespace-nowrap rounded-full px-3 py-2 transition duration-200 hover:bg-[#fff1d5] hover:text-[#173f2a]"
+                className="whitespace-nowrap rounded-full px-3 py-2 transition duration-200 hover:bg-[#edf7ef] hover:text-[#173f2a]"
               >
                 {item.label}
               </Link>
@@ -55,7 +55,7 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
               <a
                 key={item.href}
                 href={item.href}
-                className="whitespace-nowrap rounded-full px-3 py-2 transition duration-200 hover:bg-[#fff1d5] hover:text-[#173f2a]"
+                className="whitespace-nowrap rounded-full px-3 py-2 transition duration-200 hover:bg-[#edf7ef] hover:text-[#173f2a]"
               >
                 {item.label}
               </a>
@@ -66,14 +66,14 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
             <button
               type="button"
               onClick={() => setIsOrderOpen((value) => !value)}
-              className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 transition duration-200 hover:bg-[#fff1d5] hover:text-[#173f2a]"
+              className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 transition duration-200 hover:bg-[#edf7ef] hover:text-[#173f2a]"
               aria-expanded={isOrderOpen}
             >
               Order
               <ChevronDown className={`transition duration-200 ${isOrderOpen ? "rotate-180" : "rotate-0"}`} size={14} strokeWidth={3} />
             </button>
             {isOrderOpen ? (
-              <div className="animate-menu-panel absolute right-0 top-10 w-52 rounded-[8px] border border-[#e5d7bd] bg-white p-2 text-[#173f2a] shadow-xl">
+              <div className="animate-menu-panel absolute right-0 top-10 w-52 rounded-[8px] border border-[#dbe8dd] bg-white p-2 text-[#173f2a] shadow-xl">
                 {orderItems.map((item) => (
                   <a
                     key={item.label}
@@ -81,7 +81,7 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => setIsOrderOpen(false)}
-                    className="flex rounded-[8px] px-3 py-2 text-xs font-black uppercase tracking-[0.08em] transition duration-200 hover:bg-[#fff1d5]"
+                    className="flex rounded-[8px] px-3 py-2 text-xs font-black uppercase tracking-[0.08em] transition duration-200 hover:bg-[#edf7ef]"
                   >
                     {item.label}
                   </a>
@@ -94,7 +94,7 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
         <button
           type="button"
           onClick={() => setIsMobileOpen((value) => !value)}
-          className="relative z-50 flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#e5d7bd] bg-white text-[#173f2a] transition duration-200 hover:bg-[#fff1d5] md:hidden"
+          className="relative z-50 flex h-10 w-10 items-center justify-center rounded-[8px] border border-[#dbe8dd] bg-white text-[#173f2a] transition duration-200 hover:bg-[#edf7ef] md:hidden"
           aria-label="Toggle menu"
           aria-expanded={isMobileOpen}
         >
@@ -111,18 +111,18 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
       />
       <div className="pointer-events-none fixed inset-y-0 right-0 z-40 w-full overflow-hidden md:hidden">
         <aside
-          className={`pointer-events-auto absolute right-0 top-0 h-dvh w-[82vw] max-w-sm border-l border-[#e5d7bd] bg-[#fff9ef] p-5 pt-20 shadow-2xl transition duration-300 ${
+          className={`pointer-events-auto absolute right-0 top-0 h-dvh w-[82vw] max-w-sm border-l border-[#dbe8dd] bg-[#f6fbf7] p-5 pt-20 shadow-2xl transition duration-300 ${
             isMobileOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
           <div className="grid gap-2 text-sm font-black uppercase tracking-[0.08em] text-[#173f2a]">
             {navItems.map((item) =>
               item.href.startsWith("/") ? (
-                <Link key={item.href} href={item.href} onClick={closeMenus} className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3">
+                <Link key={item.href} href={item.href} onClick={closeMenus} className="rounded-[8px] border border-[#dbe8dd] bg-white px-4 py-3">
                   {item.label}
                 </Link>
               ) : (
-                <a key={item.href} href={item.href} onClick={closeMenus} className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3">
+                <a key={item.href} href={item.href} onClick={closeMenus} className="rounded-[8px] border border-[#dbe8dd] bg-white px-4 py-3">
                   {item.label}
                 </a>
               ),
@@ -130,7 +130,7 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
           </div>
 
           <div className="mt-6">
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5d21]">Order</p>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#2f6b46]">Order</p>
             <div className="mt-3 grid gap-2 text-sm font-black uppercase tracking-[0.08em]">
               {orderItems.map((item) => (
                 <a
@@ -139,7 +139,7 @@ export function LandingNav({ grabFoodUrl, shopeeFoodUrl, goFoodUrl, whatsappUrl 
                   target="_blank"
                   rel="noreferrer"
                   onClick={closeMenus}
-                  className="rounded-[8px] border border-[#e5d7bd] bg-white px-4 py-3 text-[#173f2a]"
+                  className="rounded-[8px] border border-[#dbe8dd] bg-white px-4 py-3 text-[#173f2a]"
                 >
                   {item.label}
                 </a>

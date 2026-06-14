@@ -33,9 +33,9 @@ export default async function OrderSuccessPage({
   const status = await getInitialStatus(code, orderId);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-[#fff9ef] px-5 text-[#233224]">
-      <div className="w-full max-w-md rounded-[8px] border border-[#f0ddbc] bg-white p-6 text-center shadow-sm">
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-[#9a7a35]">Order masuk</p>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[#f6fbf7] px-5 text-[#233224]">
+      <div className="w-full max-w-md rounded-[8px] border border-[#dbe8dd] bg-white p-6 text-center shadow-sm">
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2f6b46]">Order masuk</p>
         <h1 className="mt-2 text-3xl font-black text-[#173f2a]">
           {order ? `#${order}` : "Thank you"}
         </h1>
@@ -43,7 +43,7 @@ export default async function OrderSuccessPage({
           Pesanan kamu sudah masuk ke kasir.
         </p>
         {paymentLabel ? (
-          <div className="mt-4 rounded-[8px] border border-[#f0ddbc] bg-[#fffaf0] p-3 text-sm font-bold text-[#173f2a]">
+          <div className="mt-4 rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-3 text-sm font-bold text-[#173f2a]">
             Payment: {paymentLabel}
           </div>
         ) : null}

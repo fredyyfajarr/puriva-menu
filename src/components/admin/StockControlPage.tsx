@@ -49,7 +49,7 @@ export function StockControlPage({ catalog, isPreviewMode }: { catalog: MenuCata
         description="Toggle sold out cepat supaya customer tidak bisa order item yang stoknya habis."
       />
 
-      <section className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+      <section className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex gap-2 overflow-x-auto pb-1">
             {catalog.sections.map((section) => (
@@ -63,7 +63,7 @@ export function StockControlPage({ catalog, isPreviewMode }: { catalog: MenuCata
                 className={`h-10 shrink-0 rounded-[8px] border px-3 text-xs font-black uppercase ${
                   activeSlug === section.slug
                     ? "border-[#173f2a] bg-[#173f2a] text-white"
-                    : "border-[#d9c8a7] bg-white text-[#4a4f45]"
+                    : "border-[#c9decf] bg-white text-[#4a4f45]"
                 }`}
               >
                 {section.slug === "cold-pressed-juice" ? "Cold-Pressed" : section.title}
@@ -71,22 +71,22 @@ export function StockControlPage({ catalog, isPreviewMode }: { catalog: MenuCata
             ))}
           </div>
           <div className="relative w-full sm:max-w-md">
-            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7a5d21]" size={17} />
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#2f6b46]" size={17} />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search product..."
-              className="h-11 w-full rounded-[8px] border border-[#d9c8a7] bg-white pl-10 pr-3 text-sm font-medium"
+              className="h-11 w-full rounded-[8px] border border-[#c9decf] bg-white pl-10 pr-3 text-sm font-medium"
             />
           </div>
         </div>
       </section>
 
-      <section className="rounded-[8px] border border-[#e5d7bd] bg-white shadow-sm">
+      <section className="rounded-[8px] border border-[#dbe8dd] bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-[#ead8b7] text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21]">
+              <tr className="border-b border-[#dbe8dd] text-xs font-black uppercase tracking-[0.12em] text-[#2f6b46]">
                 <th className="px-4 py-3">Product</th>
                 <th className="px-4 py-3">Category</th>
                 <th className="px-4 py-3">Price</th>
@@ -94,7 +94,7 @@ export function StockControlPage({ catalog, isPreviewMode }: { catalog: MenuCata
                 <th className="px-4 py-3 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f3e5cd]">
+            <tbody className="divide-y divide-[#dbe8dd]">
               {filteredEntries.map((entry) => (
                 <Fragment key={entry.id}>
                   {(() => {
@@ -111,7 +111,7 @@ export function StockControlPage({ catalog, isPreviewMode }: { catalog: MenuCata
                       </p>
                     </td>
                     <td className="px-4 py-3 font-bold text-[#4a4f45]">{entry.sectionTitle}</td>
-                    <td className="px-4 py-3 font-black text-[#1687a7]">{formatShortIdr(entry.priceIdr ?? entry.sectionPrice ?? 0)}</td>
+                    <td className="px-4 py-3 font-black text-[#2f8f5b]">{formatShortIdr(entry.priceIdr ?? entry.sectionPrice ?? 0)}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-3 py-1 text-xs font-black uppercase ${
@@ -127,7 +127,7 @@ export function StockControlPage({ catalog, isPreviewMode }: { catalog: MenuCata
                         <input type="hidden" name="isAvailable" value={String(entry.isAvailable)} />
                         <button
                           disabled={isPreviewMode}
-                          className="h-9 rounded-[8px] border border-[#d9c8a7] bg-[#fffaf0] px-3 text-xs font-black uppercase text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
+                          className="h-9 rounded-[8px] border border-[#c9decf] bg-[#f6fbf7] px-3 text-xs font-black uppercase text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
                         >
                           {entry.isAvailable ? "Mark sold out" : "Restock"}
                         </button>
@@ -144,7 +144,7 @@ export function StockControlPage({ catalog, isPreviewMode }: { catalog: MenuCata
                         const statusLabel = isIngredientBlocked ? "Base sold out" : isMixAvailable ? "Available" : "Sold out";
 
                         return (
-                          <tr key={`${entry.id}-${mix}`} className="bg-[#fffaf0]">
+                          <tr key={`${entry.id}-${mix}`} className="bg-[#f6fbf7]">
                             <td className="px-4 py-2 pl-8 text-sm font-bold text-[#4a4f45]">+ {mix}</td>
                             <td className="px-4 py-2 text-xs text-[#65705e]" colSpan={2}>
                               {isIngredientBlocked ? "Ikut sold out karena base/bahan ini dimatikan." : "Varian mix"}
@@ -165,7 +165,7 @@ export function StockControlPage({ catalog, isPreviewMode }: { catalog: MenuCata
                                 <input type="hidden" name="isAvailable" value={String(isDirectMixAvailable)} />
                                 <button
                                   disabled={isPreviewMode || !entry.isAvailable || isIngredientBlocked}
-                                  className="h-9 rounded-[8px] border border-[#d9c8a7] bg-white px-3 text-xs font-black uppercase text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
+                                  className="h-9 rounded-[8px] border border-[#c9decf] bg-white px-3 text-xs font-black uppercase text-[#4a4f45] disabled:cursor-not-allowed disabled:opacity-45"
                                 >
                                   {isIngredientBlocked ? "Base sold out" : isDirectMixAvailable ? "Sold out mix" : "Restock mix"}
                                 </button>

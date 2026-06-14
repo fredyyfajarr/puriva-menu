@@ -40,7 +40,7 @@ function createSingleInvoicePdf(order: NonNullable<Awaited<ReturnType<ReturnType
     }
 
     doc.moveDown(0.8);
-    doc.fontSize(16).fillColor("#1687a7").text(`Total: ${formatShortIdr(order.subtotalIdr)}`, { align: "right" });
+    doc.fontSize(16).fillColor("#2f8f5b").text(`Total: ${formatShortIdr(order.subtotalIdr)}`, { align: "right" });
     doc.end();
   });
 }

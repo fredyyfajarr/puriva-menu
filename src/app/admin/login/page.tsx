@@ -14,8 +14,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const error = params?.error;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#fff9ef] px-5 text-[#1f2f22]">
-      <section className="w-full max-w-md rounded-[8px] border border-[#e5d7bd] bg-white p-6 shadow-sm">
+    <main className="flex min-h-screen items-center justify-center bg-[#f6fbf7] px-5 text-[#1f2f22]">
+      <section className="w-full max-w-md rounded-[8px] border border-[#dbe8dd] bg-white p-6 shadow-sm">
         <div className="mb-6 flex items-center gap-3">
           <PurivaLogo compact />
           <div>
@@ -25,7 +25,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </div>
 
         {!isConfigured ? (
-          <div className="mb-4 rounded-[8px] border border-[#e0c58f] bg-[#fff9ef] p-3 text-sm text-[#72581d]">
+          <div className="mb-4 rounded-[8px] border border-[#c9decf] bg-[#f6fbf7] p-3 text-sm text-[#2f6b46]">
             Supabase env belum terpasang. Admin login aktif setelah project Supabase dibuat.
           </div>
         ) : null}
@@ -42,7 +42,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <input
               name="email"
               type="email"
-              className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium"
+              className="h-11 rounded-[8px] border border-[#c9decf] px-3 font-medium"
               required
             />
           </label>
@@ -52,7 +52,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               name="password"
               type="password"
               minLength={8}
-              className="h-11 rounded-[8px] border border-[#d9c8a7] px-3 font-medium"
+              className="h-11 rounded-[8px] border border-[#c9decf] px-3 font-medium"
               required
             />
           </label>

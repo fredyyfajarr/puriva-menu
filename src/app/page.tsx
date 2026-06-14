@@ -1,6 +1,7 @@
 import { ArrowRight, Bike, Droplets, Leaf, MapPin, MessageCircle, Search, ShoppingBag, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+import { PurivaLogo } from "@/components/brand/PurivaLogo";
 import { LandingNav } from "@/components/landing/LandingNav";
 import { HeroJuiceStage } from "@/components/menu/HeroJuiceStage";
 
@@ -17,19 +18,22 @@ const goFoodUrl =
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-[#fff9ef] text-[#233224]">
+    <main className="min-h-screen bg-[#f6fbf7] text-[#233224]">
       <LandingNav grabFoodUrl={grabFoodUrl} shopeeFoodUrl={shopeeFoodUrl} goFoodUrl={goFoodUrl} whatsappUrl={whatsappUrl} />
 
-      <section className="relative overflow-hidden border-b border-[#f0ddbc] bg-[#fff7e8]">
+      <section className="relative overflow-hidden border-b border-[#dbe8dd] bg-[#f6fbf7]">
         <div className="mx-auto grid min-h-[calc(100vh-80px)] w-full max-w-6xl items-center gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[minmax(0,1fr)_430px]">
           <div className="max-w-3xl">
-            <div className="animate-landing-in mb-5 inline-flex items-center gap-2 rounded-full border border-[#e8d4ab] bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-[#7a5d21]">
+            <div className="animate-landing-in mb-5 inline-flex items-center gap-2 rounded-full border border-[#dbe8dd] bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-[#2f6b46]">
               <Sparkles size={14} />
               Fresh daily juice bar
             </div>
             <h1 className="animate-landing-in text-5xl font-black leading-[0.95] text-[#173f2a] sm:text-7xl [animation-delay:90ms]">
-              Puriva Live
-              <span className="block text-[#d64e2a]">Cold Pressed & Blended Juice</span>
+              <span className="mb-2 block">
+                <PurivaLogo className="text-4xl sm:text-5xl" />
+              </span>
+              Live
+              <span className="block text-[#2f6b46]">Cold Pressed & Blended Juice</span>
             </h1>
             <p className="animate-landing-in mt-6 max-w-2xl text-lg leading-8 text-[#4d5a47] [animation-delay:170ms]">
               Jus buah dan sayur segar yang dipress dingin, tanpa air, tanpa gula, tanpa sirup. Pilihan clean untuk
@@ -44,11 +48,11 @@ export default function LandingPage() {
                 <ArrowRight size={17} />
               </Link>
             </div>
-            <div className="animate-landing-in mt-6 flex flex-wrap gap-2 text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21] [animation-delay:330ms]">
-              <span className="rounded-full border border-[#e8d4ab] bg-white px-3 py-2 transition duration-200 hover:-translate-y-0.5 hover:border-[#f7c76b]">Cold pressed</span>
-              <span className="rounded-full border border-[#e8d4ab] bg-white px-3 py-2 transition duration-200 hover:-translate-y-0.5 hover:border-[#f7c76b]">Blended juice</span>
-              <span className="rounded-full border border-[#e8d4ab] bg-white px-3 py-2 transition duration-200 hover:-translate-y-0.5 hover:border-[#f7c76b]">Cut fruits</span>
-              <span className="rounded-full border border-[#e8d4ab] bg-white px-3 py-2 transition duration-200 hover:-translate-y-0.5 hover:border-[#f7c76b]">Pre-made juice</span>
+            <div className="animate-landing-in mt-6 flex flex-wrap gap-2 text-xs font-black uppercase tracking-[0.12em] text-[#2f6b46] [animation-delay:330ms]">
+              <span className="rounded-full border border-[#dbe8dd] bg-white px-3 py-2 transition duration-200 hover:-translate-y-0.5 hover:border-[#9fcfaf]">Cold pressed</span>
+              <span className="rounded-full border border-[#dbe8dd] bg-white px-3 py-2 transition duration-200 hover:-translate-y-0.5 hover:border-[#9fcfaf]">Blended juice</span>
+              <span className="rounded-full border border-[#dbe8dd] bg-white px-3 py-2 transition duration-200 hover:-translate-y-0.5 hover:border-[#9fcfaf]">Cut fruits</span>
+              <span className="rounded-full border border-[#dbe8dd] bg-white px-3 py-2 transition duration-200 hover:-translate-y-0.5 hover:border-[#9fcfaf]">Pre-made juice</span>
             </div>
           </div>
           <HeroJuiceStage className="min-h-[390px] justify-self-center lg:justify-self-end" />
@@ -61,7 +65,7 @@ export default function LandingPage() {
           { icon: <Droplets size={20} />, title: "Rasa clean", copy: "Cold pressed menjaga karakter rasa buah dan sayur tetap ringan diminum." },
           { icon: <ShoppingBag size={20} />, title: "Bisa order satuan & bulk", copy: "Cocok untuk konsumsi harian, kantor, acara, atau healthy gift." },
         ].map((item) => (
-          <article key={item.title} className="animate-landing-in rounded-[8px] border border-[#e5d7bd] bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+          <article key={item.title} className="animate-landing-in rounded-[8px] border border-[#dbe8dd] bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
             <div className="flex h-11 w-11 items-center justify-center rounded-[8px] bg-[#173f2a] text-white transition duration-300 group-hover:scale-105">{item.icon}</div>
             <h2 className="mt-4 text-xl font-black text-[#173f2a]">{item.title}</h2>
             <p className="mt-2 text-sm leading-6 text-[#65705e]">{item.copy}</p>
@@ -69,10 +73,10 @@ export default function LandingPage() {
         ))}
       </section>
 
-      <section className="border-y border-[#f0ddbc] bg-white">
+      <section className="border-y border-[#dbe8dd] bg-white">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
           <div>
-            <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-[#7a5d21]">
+            <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-[#2f6b46]">
               <Droplets size={15} />
               Menu sehat yang tetap enak
             </p>
@@ -86,7 +90,7 @@ export default function LandingPage() {
             </p>
             <Link
               href="/menu"
-              className="mt-6 inline-flex h-11 items-center gap-2 rounded-[8px] bg-[#d64e2a] px-5 text-sm font-black uppercase text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#c13f20] hover:shadow-lg"
+              className="mt-6 inline-flex h-11 items-center gap-2 rounded-[8px] bg-[#2f6b46] px-5 text-sm font-black uppercase text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#214c34] hover:shadow-lg"
             >
               Buka menu digital
               <ArrowRight size={16} />
@@ -99,7 +103,7 @@ export default function LandingPage() {
               { title: "Hydration", copy: "Watermelon, melon, cucumber, dan green apple yang segar diminum dingin." },
               { title: "Pre-made Juice", copy: "Varian siap minum dengan komposisi buah yang sudah dikurasi." },
             ].map((item) => (
-              <article key={item.title} className="rounded-[8px] border border-[#e5d7bd] bg-[#fffaf0] p-4 transition duration-300 hover:-translate-y-1 hover:border-[#f7c76b] hover:bg-white hover:shadow-md">
+              <article key={item.title} className="rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-4 transition duration-300 hover:-translate-y-1 hover:border-[#9fcfaf] hover:bg-white hover:shadow-md">
                 <h3 className="font-black text-[#173f2a]">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-[#65705e]">{item.copy}</p>
               </article>
@@ -109,12 +113,12 @@ export default function LandingPage() {
       </section>
 
       <section id="location" className="mx-auto grid scroll-mt-20 w-full max-w-6xl gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-5 shadow-sm transition duration-300 hover:shadow-lg">
-          <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-[#7a5d21]">
+        <div className="rounded-[8px] border border-[#dbe8dd] bg-white p-5 shadow-sm transition duration-300 hover:shadow-lg">
+          <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-[#2f6b46]">
             <Bike size={15} />
             Order & delivery
           </p>
-          <h2 className="mt-3 text-3xl font-black text-[#173f2a]">Order dari outlet Puriva Live Gading Serpong</h2>
+          <h2 className="mt-3 text-3xl font-black text-[#173f2a]">Order dari outlet Gading Serpong</h2>
           <p className="mt-3 text-sm leading-6 text-[#65705e]">
             Pilih channel delivery favorit kamu, atau chat WhatsApp untuk bulk order kantor, acara, dan request jumlah
             botol.
@@ -133,7 +137,7 @@ export default function LandingPage() {
               href={shopeeFoodUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-12 items-center justify-between rounded-[8px] border border-[#d64e2a] bg-[#fff1e8] px-4 text-sm font-black uppercase text-[#b83d1f] transition duration-200 hover:-translate-y-0.5 hover:bg-[#ffe4d5] hover:shadow-md"
+              className="inline-flex h-12 items-center justify-between rounded-[8px] border border-[#2f6b46] bg-[#edf7ef] px-4 text-sm font-black uppercase text-[#285a39] transition duration-200 hover:-translate-y-0.5 hover:bg-[#ffe4d5] hover:shadow-md"
             >
               Order via ShopeeFood
               <ShoppingBag size={18} />
@@ -148,9 +152,9 @@ export default function LandingPage() {
               <Bike size={18} />
             </a>
           </div>
-          <div className="mt-5 rounded-[8px] border border-dashed border-[#e5d7bd] bg-[#fffaf0] p-4">
+          <div className="mt-5 rounded-[8px] border border-dashed border-[#dbe8dd] bg-[#f6fbf7] p-4">
             <div className="flex items-start gap-3">
-              <Search className="mt-0.5 shrink-0 text-[#7a5d21]" size={18} />
+              <Search className="mt-0.5 shrink-0 text-[#2f6b46]" size={18} />
               <p className="text-sm leading-6 text-[#65705e]">
                 ShopeeFood dan GoFood juga tersedia untuk order delivery. Link lengkapnya ada di dropdown{" "}
                 <span className="font-black text-[#173f2a]">Order</span> pada navbar.
@@ -163,26 +167,29 @@ export default function LandingPage() {
           href={mapsUrl}
           target="_blank"
           rel="noreferrer"
-          className="group relative min-h-[420px] overflow-hidden rounded-[8px] border border-[#e5d7bd] bg-[#fffaf0] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+          className="group relative min-h-[420px] overflow-hidden rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
         >
           <div className="absolute inset-0 opacity-80">
-            <div className="absolute left-[12%] top-0 h-full w-px bg-[#e5d7bd]" />
-            <div className="absolute left-[34%] top-0 h-full w-px bg-[#e5d7bd]" />
-            <div className="absolute left-[58%] top-0 h-full w-px bg-[#e5d7bd]" />
-            <div className="absolute left-[78%] top-0 h-full w-px bg-[#e5d7bd]" />
-            <div className="absolute left-0 top-[18%] h-px w-full bg-[#e5d7bd]" />
-            <div className="absolute left-0 top-[42%] h-px w-full bg-[#e5d7bd]" />
-            <div className="absolute left-0 top-[66%] h-px w-full bg-[#e5d7bd]" />
-            <div className="absolute left-0 top-[84%] h-px w-full bg-[#e5d7bd]" />
+            <div className="absolute left-[12%] top-0 h-full w-px bg-[#dbe8dd]" />
+            <div className="absolute left-[34%] top-0 h-full w-px bg-[#dbe8dd]" />
+            <div className="absolute left-[58%] top-0 h-full w-px bg-[#dbe8dd]" />
+            <div className="absolute left-[78%] top-0 h-full w-px bg-[#dbe8dd]" />
+            <div className="absolute left-0 top-[18%] h-px w-full bg-[#dbe8dd]" />
+            <div className="absolute left-0 top-[42%] h-px w-full bg-[#dbe8dd]" />
+            <div className="absolute left-0 top-[66%] h-px w-full bg-[#dbe8dd]" />
+            <div className="absolute left-0 top-[84%] h-px w-full bg-[#dbe8dd]" />
             <div className="absolute left-[-8%] top-[52%] h-12 w-[118%] rotate-[-8deg] bg-[#d9f0df]" />
-            <div className="absolute left-[25%] top-[-10%] h-[120%] w-12 rotate-[18deg] bg-[#fde8bf]" />
+            <div className="absolute left-[25%] top-[-10%] h-[120%] w-12 rotate-[18deg] bg-[#dcefe2]" />
           </div>
           <div className="animate-soft-pulse absolute left-1/2 top-1/2 flex h-24 w-24 items-center justify-center rounded-full bg-[#173f2a] text-white shadow-xl">
             <MapPin size={42} />
           </div>
-          <div className="absolute bottom-5 left-5 right-5 rounded-[8px] border border-[#e5d7bd] bg-white p-5 shadow-sm">
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#7a5d21]">Google Maps</p>
-            <h3 className="mt-2 text-2xl font-black text-[#173f2a]">Puriva Live, Gading Serpong</h3>
+          <div className="absolute bottom-5 left-5 right-5 rounded-[8px] border border-[#dbe8dd] bg-white p-5 shadow-sm">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#2f6b46]">Google Maps</p>
+            <h3 className="mt-2 text-2xl font-black text-[#173f2a]">
+              <PurivaLogo className="mr-2 align-[-0.08em] text-xl" />
+              Gading Serpong
+            </h3>
             <p className="mt-2 text-sm leading-6 text-[#65705e]">
               Tap card ini untuk buka rute langsung di Google Maps.
             </p>
@@ -190,7 +197,7 @@ export default function LandingPage() {
         </a>
       </section>
 
-      <section className="border-t border-[#f0ddbc] bg-[#173f2a]">
+      <section className="border-t border-[#dbe8dd] bg-[#173f2a]">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 py-9 text-white sm:px-8 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-3xl font-black">Mau stock jus untuk kantor atau acara?</h2>
@@ -210,7 +217,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-[#f0ddbc] px-5 py-6 text-center text-sm font-bold text-[#65705e]">
+      <footer className="border-t border-[#dbe8dd] px-5 py-6 text-center text-sm font-bold text-[#65705e]">
         Copyright 2026. Made with love by fredyyfajarr.
       </footer>
     </main>

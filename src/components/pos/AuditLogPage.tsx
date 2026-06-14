@@ -28,12 +28,12 @@ export function AuditLogPage({ logs }: { logs: AuditLog[] }) {
         description="Jejak perubahan penting untuk order, payment, QR meja, dan aktivitas customer order."
       />
 
-      <section className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+      <section className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
         {logs.length ? (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-[#ead8b7] text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21]">
+                <tr className="border-b border-[#dbe8dd] text-xs font-black uppercase tracking-[0.12em] text-[#2f6b46]">
                   <th className="py-3 pr-4">Time</th>
                   <th className="py-3 pr-4">Action</th>
                   <th className="py-3 pr-4">Entity</th>
@@ -41,7 +41,7 @@ export function AuditLogPage({ logs }: { logs: AuditLog[] }) {
                   <th className="py-3">Metadata</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#f3e5cd]">
+              <tbody className="divide-y divide-[#dbe8dd]">
                 {logs.map((log) => (
                   <tr key={log.id}>
                     <td className="whitespace-nowrap py-3 pr-4 font-bold text-[#233224]">{formatDateTime(log.createdAt)}</td>
@@ -64,7 +64,7 @@ export function AuditLogPage({ logs }: { logs: AuditLog[] }) {
           </div>
         ) : (
           <div className="p-8 text-center">
-            <FileClock className="mx-auto text-[#7a5d21]" size={32} />
+            <FileClock className="mx-auto text-[#2f6b46]" size={32} />
             <h2 className="mt-3 text-2xl font-black text-[#173f2a]">Belum ada audit log</h2>
             <p className="mt-2 text-sm text-[#65705e]">Aktivitas baru akan tercatat setelah migration dijalankan.</p>
           </div>

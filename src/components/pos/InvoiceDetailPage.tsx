@@ -32,7 +32,7 @@ function printMode(mode: "receipt" | "kitchen") {
 
 function PrintLineItems({ order, kitchen = false }: { order: Order; kitchen?: boolean }) {
   return (
-    <div className="divide-y divide-[#d9c8a7]">
+    <div className="divide-y divide-[#c9decf]">
       {order.items.map((item) => (
         <div key={item.id} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-2">
           <div>
@@ -73,14 +73,14 @@ export function InvoiceDetailPage({ order, payment }: { order: Order; payment?: 
           <button
             type="button"
             onClick={() => printMode("kitchen")}
-            className="inline-flex h-10 items-center gap-2 rounded-[8px] border border-[#d9c8a7] bg-white px-4 text-sm font-black text-[#173f2a]"
+            className="inline-flex h-10 items-center gap-2 rounded-[8px] border border-[#c9decf] bg-white px-4 text-sm font-black text-[#173f2a]"
           >
             <ChefHat size={16} />
             Kitchen ticket
           </button>
           <a
             href={`/admin/invoices/${order.id}/pdf`}
-            className="inline-flex h-10 items-center gap-2 rounded-[8px] bg-[#1687a7] px-4 text-sm font-black text-white"
+            className="inline-flex h-10 items-center gap-2 rounded-[8px] bg-[#2f8f5b] px-4 text-sm font-black text-white"
           >
             <Download size={16} />
             PDF
@@ -89,25 +89,25 @@ export function InvoiceDetailPage({ order, payment }: { order: Order; payment?: 
       </div>
 
       <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+        <div className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
           <h2 className="text-xl font-black text-[#173f2a]">Items</h2>
-          <div className="mt-4 divide-y divide-[#f3e5cd] rounded-[8px] border border-[#f3e5cd]">
+          <div className="mt-4 divide-y divide-[#dbe8dd] rounded-[8px] border border-[#dbe8dd]">
             {order.items.map((item) => (
               <div key={item.id} className="grid gap-2 p-3 sm:grid-cols-[minmax(0,1fr)_auto]">
                 <div>
                   <p className="font-black uppercase text-[#233224]">
                     {item.quantity}x {item.itemName}
                   </p>
-                  {item.variantLabel ? <p className="mt-1 text-sm font-bold text-[#7a5d21]">{item.variantLabel}</p> : null}
+                  {item.variantLabel ? <p className="mt-1 text-sm font-bold text-[#2f6b46]">{item.variantLabel}</p> : null}
                   {item.notes ? <p className="mt-1 text-sm text-[#65705e]">{item.notes}</p> : null}
                 </div>
-                <p className="font-black text-[#1687a7]">{formatShortIdr(item.lineTotalIdr)}</p>
+                <p className="font-black text-[#2f8f5b]">{formatShortIdr(item.lineTotalIdr)}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <aside className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+        <aside className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
           <h2 className="text-xl font-black text-[#173f2a]">Summary</h2>
           <div className="mt-4 grid gap-3 text-sm">
             <p className="flex justify-between gap-3">
@@ -128,24 +128,24 @@ export function InvoiceDetailPage({ order, payment }: { order: Order; payment?: 
                 <span className="font-black text-[#233224]">{order.customerName}</span>
               </p>
             ) : null}
-            {order.notes ? <p className="rounded-[8px] bg-[#fffaf0] p-3 text-[#65705e]">{order.notes}</p> : null}
+            {order.notes ? <p className="rounded-[8px] bg-[#f6fbf7] p-3 text-[#65705e]">{order.notes}</p> : null}
             {order.cancelReason ? <p className="rounded-[8px] bg-[#fff0ed] p-3 font-bold text-[#b42318]">Cancel: {order.cancelReason}</p> : null}
             {payment ? (
-              <div className="rounded-[8px] border border-[#f0ddbc] bg-[#fffaf0] p-3">
-                <p className="text-xs font-black uppercase tracking-[0.12em] text-[#7a5d21]">Payment provider</p>
+              <div className="rounded-[8px] border border-[#dbe8dd] bg-[#f6fbf7] p-3">
+                <p className="text-xs font-black uppercase tracking-[0.12em] text-[#2f6b46]">Payment provider</p>
                 <p className="mt-1 font-black text-[#233224]">{payment.provider}</p>
                 {payment.providerReference ? <p className="break-words text-xs text-[#65705e]">{payment.providerReference}</p> : null}
                 {payment.checkoutUrl ? (
-                  <a href={payment.checkoutUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex text-xs font-black uppercase text-[#1687a7]">
+                  <a href={payment.checkoutUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex text-xs font-black uppercase text-[#2f8f5b]">
                     Open QR image
                   </a>
                 ) : null}
               </div>
             ) : null}
-            <div className="border-t border-[#f3e5cd] pt-3">
+            <div className="border-t border-[#dbe8dd] pt-3">
               <p className="flex justify-between gap-3 text-lg">
                 <span className="font-black text-[#173f2a]">Total</span>
-                <span className="font-black text-[#1687a7]">{formatShortIdr(order.subtotalIdr)}</span>
+                <span className="font-black text-[#2f8f5b]">{formatShortIdr(order.subtotalIdr)}</span>
               </p>
             </div>
           </div>

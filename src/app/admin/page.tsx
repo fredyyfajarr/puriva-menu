@@ -53,7 +53,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   if (!["owner", "admin"].includes(profile?.role ?? "")) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f7f3ea] px-5 text-[#1f2f22]">
-        <div className="max-w-md rounded-[8px] border border-[#e5d7bd] bg-white p-6">
+        <div className="max-w-md rounded-[8px] border border-[#dbe8dd] bg-white p-6">
           <h1 className="text-2xl font-black text-[#173f2a]">No admin access</h1>
           <p className="mt-2 text-sm text-[#65705e]">
             Akun ini sudah login, tapi belum punya role owner/admin di table profiles.

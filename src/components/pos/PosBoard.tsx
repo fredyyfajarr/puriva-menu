@@ -91,10 +91,10 @@ function OrderCard({ order }: { order: Order }) {
   const needsPaymentAttention = order.paymentStatus !== "paid";
 
   return (
-    <article className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+    <article className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#9a7a35]">#{order.orderNumber}</p>
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#2f6b46]">#{order.orderNumber}</p>
           <h2 className="mt-1 text-2xl font-black text-[#173f2a]">{order.tableLabel}</h2>
           <p className="mt-1 flex items-center gap-1 text-xs font-bold text-[#65705e]">
             <Clock size={14} />
@@ -109,14 +109,14 @@ function OrderCard({ order }: { order: Order }) {
             {getPaymentDisplay(order)}
           </span>
           {order.paymentMethod ? (
-            <span className="rounded-full bg-[#fffaf0] px-3 py-1 text-xs font-black uppercase text-[#7a5d21]">
+            <span className="rounded-full bg-[#f6fbf7] px-3 py-1 text-xs font-black uppercase text-[#2f6b46]">
               {paymentMethodLabels[order.paymentMethod] ?? order.paymentMethod}
             </span>
           ) : null}
         </div>
       </div>
 
-      <div className="mt-4 divide-y divide-[#f3e5cd] rounded-[8px] border border-[#f3e5cd]">
+      <div className="mt-4 divide-y divide-[#dbe8dd] rounded-[8px] border border-[#dbe8dd]">
         {order.items.map((item) => (
           <div key={item.id} className="p-3">
             <div className="flex items-start justify-between gap-3">
@@ -124,17 +124,17 @@ function OrderCard({ order }: { order: Order }) {
                 <p className="break-words text-sm font-black uppercase text-[#233224]">
                   {item.quantity}x {item.itemName}
                 </p>
-                {item.variantLabel ? <p className="mt-1 break-words text-xs font-bold text-[#7a5d21]">{item.variantLabel}</p> : null}
+                {item.variantLabel ? <p className="mt-1 break-words text-xs font-bold text-[#2f6b46]">{item.variantLabel}</p> : null}
                 {item.notes ? <p className="mt-1 break-words text-xs text-[#65705e]">{item.notes}</p> : null}
               </div>
-              <p className="shrink-0 text-sm font-black text-[#1687a7]">{formatShortIdr(item.lineTotalIdr)}</p>
+              <p className="shrink-0 text-sm font-black text-[#2f8f5b]">{formatShortIdr(item.lineTotalIdr)}</p>
             </div>
           </div>
         ))}
       </div>
 
       {order.notes ? (
-        <div className="mt-3 rounded-[8px] bg-[#fffaf0] p-3 text-sm leading-6 text-[#65705e]">{order.notes}</div>
+        <div className="mt-3 rounded-[8px] bg-[#f6fbf7] p-3 text-sm leading-6 text-[#65705e]">{order.notes}</div>
       ) : null}
 
       {needsPaymentAttention ? (
@@ -150,7 +150,7 @@ function OrderCard({ order }: { order: Order }) {
       ) : null}
 
       <div className="mt-4 flex items-center justify-between gap-3">
-        <p className="text-lg font-black text-[#1687a7]">{formatShortIdr(order.subtotalIdr)}</p>
+        <p className="text-lg font-black text-[#2f8f5b]">{formatShortIdr(order.subtotalIdr)}</p>
         <div className="flex flex-wrap justify-end gap-2">
           {order.paymentStatus !== "paid" ? (
             <form action={updatePaymentStatusAction}>
@@ -159,7 +159,7 @@ function OrderCard({ order }: { order: Order }) {
               <select
                 name="method"
                 defaultValue={order.paymentMethod ?? "cashier"}
-                className="mr-2 h-9 rounded-[8px] border border-[#d9c8a7] bg-white px-2 text-xs font-bold text-[#4a4f45]"
+                className="mr-2 h-9 rounded-[8px] border border-[#c9decf] bg-white px-2 text-xs font-bold text-[#4a4f45]"
               >
                 <option value="cash">Cash</option>
                 <option value="edc_bca">EDC BCA</option>
@@ -257,7 +257,7 @@ export function PosBoard({ orders }: { orders: Order[] }) {
               className={`flex items-center justify-between rounded-[8px] border px-4 py-3 text-left transition ${
                 activeStatus === tab.status
                   ? "border-[#173f2a] bg-[#173f2a] text-white"
-                  : "border-[#e5d7bd] bg-white text-[#4a4f45]"
+                  : "border-[#dbe8dd] bg-white text-[#4a4f45]"
               }`}
             >
               <span className="text-sm font-black uppercase">{tab.label}</span>
@@ -273,7 +273,7 @@ export function PosBoard({ orders }: { orders: Order[] }) {
             ))}
           </div>
         ) : (
-          <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-8 text-center shadow-sm">
+          <div className="rounded-[8px] border border-[#dbe8dd] bg-white p-8 text-center shadow-sm">
             <h2 className="text-2xl font-black text-[#173f2a]">Belum ada order {statusLabels[activeStatus]}</h2>
             <p className="mt-2 text-sm text-[#65705e]">Order dari QR meja akan masuk ke tab New lebih dulu.</p>
           </div>

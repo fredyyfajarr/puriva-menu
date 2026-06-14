@@ -50,6 +50,7 @@ Menu cold-pressed disimpan satu row per base fruit. Contoh: `Sunkist` punya list
 - Hero tetap memakai animasi juice custom, ditambah kartu foto produk real dari GrabFood Puriva.
 - Gambar menu disimpan di Supabase Storage bucket `menu-images`; kolom menu menggunakan URL publik dari bucket tersebut.
 - Cold-pressed variant image disimpan per mix di `menu_entries.mix_image_urls`, sehingga warna/foto bisa berbeda untuk `Sunkist + Carrot`, `Sunkist + Strawberry`, dan seterusnya.
+- UI theme diarahkan ke warna hijau dan putih agar konsisten dengan brand Puriva.
 
 ## Local Run
 
@@ -113,10 +114,10 @@ supabase.cmd db push
 Remote dev project saat ini memakai migration history sampai:
 
 ```text
-20260613000100_grab_product_images
+20260614000100_grab_menu_images
 ```
 
-Migration terbaru menambahkan mapping gambar produk real dari GrabFood Puriva ke menu cold-pressed.
+Migration terbaru menambahkan mapping gambar produk real dari GrabFood Puriva ke menu biasa dan varian cold-pressed.
 
 ## Tests
 

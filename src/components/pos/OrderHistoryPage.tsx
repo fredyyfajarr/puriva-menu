@@ -121,26 +121,26 @@ export function OrderHistoryPage({
         />
 
         <section className="mb-5 grid gap-3 md:grid-cols-3">
-          <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#7a5d21]">Invoices</p>
+          <div className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#2f6b46]">Invoices</p>
             <p className="mt-2 text-3xl font-black text-[#173f2a]">{orders.length}</p>
           </div>
-          <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#7a5d21]">Completed sales</p>
-            <p className="mt-2 text-3xl font-black text-[#1687a7]">{formatShortIdr(totalSales)}</p>
+          <div className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#2f6b46]">Completed sales</p>
+            <p className="mt-2 text-3xl font-black text-[#2f8f5b]">{formatShortIdr(totalSales)}</p>
           </div>
-          <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#7a5d21]">Latest invoice</p>
+          <div className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#2f6b46]">Latest invoice</p>
             <p className="mt-2 text-3xl font-black text-[#173f2a]">
               {orders[0] ? `#${orders[0].orderNumber}` : "-"}
             </p>
           </div>
         </section>
 
-        <section className="mb-5 rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+        <section className="mb-5 rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#7a5d21]">Closing summary</p>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#2f6b46]">Closing summary</p>
               <h2 className="mt-1 text-xl font-black text-[#173f2a]">
                 {filterValues.dateFrom} sampai {filterValues.dateTo}
               </h2>
@@ -149,8 +149,8 @@ export function OrderHistoryPage({
           </div>
           <div className="mt-4 grid gap-2 md:grid-cols-4">
             {closingRows.map((row) => (
-              <div key={row.key} className="rounded-[8px] bg-[#fffaf0] p-3">
-                <p className="text-xs font-black uppercase text-[#7a5d21]">{row.label}</p>
+              <div key={row.key} className="rounded-[8px] bg-[#f6fbf7] p-3">
+                <p className="text-xs font-black uppercase text-[#2f6b46]">{row.label}</p>
                 <p className="mt-1 text-lg font-black text-[#173f2a]">{formatShortIdr(row.total)}</p>
                 <p className="text-xs font-semibold text-[#65705e]">{row.count} invoice</p>
               </div>
@@ -166,7 +166,7 @@ export function OrderHistoryPage({
               className={`rounded-[8px] border px-4 py-2 text-sm font-black uppercase ${
                 tab.isActive(activeFilter)
                   ? "border-[#173f2a] bg-[#173f2a] text-white"
-                  : "border-[#d9c8a7] bg-white text-[#4a4f45]"
+                  : "border-[#c9decf] bg-white text-[#4a4f45]"
               }`}
             >
               {tab.label}
@@ -174,7 +174,7 @@ export function OrderHistoryPage({
           ))}
         </div>
 
-        <div className="mb-5 grid gap-3 rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm sm:grid-cols-[minmax(0,1fr)_220px] sm:items-end">
+        <div className="mb-5 grid gap-3 rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm sm:grid-cols-[minmax(0,1fr)_220px] sm:items-end">
           <div className="flex flex-wrap gap-2">
             {periodTabs.map((tab) => (
               <Link
@@ -183,7 +183,7 @@ export function OrderHistoryPage({
                 className={`rounded-[8px] border px-4 py-2 text-sm font-black uppercase ${
                   period === tab.period
                     ? "border-[#173f2a] bg-[#173f2a] text-white"
-                    : "border-[#d9c8a7] bg-white text-[#4a4f45]"
+                    : "border-[#c9decf] bg-white text-[#4a4f45]"
                 }`}
               >
                 {tab.label}
@@ -196,7 +196,7 @@ export function OrderHistoryPage({
               <input
                 type="date"
                 defaultValue={filterValues.date}
-                className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium"
+                className="h-11 rounded-[8px] border border-[#c9decf] bg-white px-3 font-medium"
                 onChange={(event) => {
                   const next = { ...filterValues, date: event.currentTarget.value };
                   router.push(buildInvoiceHref(activeFilter, next));
@@ -211,7 +211,7 @@ export function OrderHistoryPage({
                 <input
                   type="date"
                   defaultValue={filterValues.weekFrom}
-                  className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium"
+                  className="h-11 rounded-[8px] border border-[#c9decf] bg-white px-3 font-medium"
                   onChange={(event) => {
                     const next = { ...filterValues, weekFrom: event.currentTarget.value };
                     router.push(buildInvoiceHref(activeFilter, next));
@@ -223,7 +223,7 @@ export function OrderHistoryPage({
                 <input
                   type="date"
                   defaultValue={filterValues.weekTo}
-                  className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium"
+                  className="h-11 rounded-[8px] border border-[#c9decf] bg-white px-3 font-medium"
                   onChange={(event) => {
                     const next = { ...filterValues, weekTo: event.currentTarget.value };
                     router.push(buildInvoiceHref(activeFilter, next));
@@ -238,7 +238,7 @@ export function OrderHistoryPage({
               <input
                 type="month"
                 defaultValue={filterValues.month}
-                className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium"
+                className="h-11 rounded-[8px] border border-[#c9decf] bg-white px-3 font-medium"
                 onChange={(event) => {
                   const next = { ...filterValues, month: event.currentTarget.value };
                   router.push(buildInvoiceHref(activeFilter, next));
@@ -254,7 +254,7 @@ export function OrderHistoryPage({
                 min="2020"
                 max="2100"
                 defaultValue={filterValues.year}
-                className="h-11 rounded-[8px] border border-[#d9c8a7] bg-white px-3 font-medium"
+                className="h-11 rounded-[8px] border border-[#c9decf] bg-white px-3 font-medium"
                 onChange={(event) => {
                   const next = { ...filterValues, year: event.currentTarget.value };
                   router.push(buildInvoiceHref(activeFilter, next));
@@ -267,10 +267,10 @@ export function OrderHistoryPage({
         {orders.length > 0 ? (
           <div className="grid gap-4">
             {orders.map((order) => (
-              <article key={order.id} className="rounded-[8px] border border-[#e5d7bd] bg-white p-4 shadow-sm">
+              <article key={order.id} className="rounded-[8px] border border-[#dbe8dd] bg-white p-4 shadow-sm">
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div className="min-w-0">
-                    <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#9a7a35]">
+                    <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#2f6b46]">
                       <ReceiptText size={15} />
                       Invoice #{order.orderNumber}
                     </p>
@@ -290,27 +290,27 @@ export function OrderHistoryPage({
                     <span className={`rounded-full px-3 py-1 text-xs font-black uppercase ${getPaymentTone(order.paymentStatus)}`}>
                       {paymentLabels[order.paymentStatus]}
                     </span>
-                    <span className="text-xl font-black text-[#1687a7]">{formatShortIdr(order.subtotalIdr)}</span>
+                    <span className="text-xl font-black text-[#2f8f5b]">{formatShortIdr(order.subtotalIdr)}</span>
                   </div>
                 </div>
 
-                <div className="mt-4 divide-y divide-[#f3e5cd] rounded-[8px] border border-[#f3e5cd]">
+                <div className="mt-4 divide-y divide-[#dbe8dd] rounded-[8px] border border-[#dbe8dd]">
                   {order.items.map((item) => (
                     <div key={item.id} className="grid gap-2 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                       <div className="min-w-0">
                         <p className="break-words text-sm font-black uppercase text-[#233224]">
                           {item.quantity}x {item.itemName}
                         </p>
-                        {item.variantLabel ? <p className="mt-1 break-words text-xs font-bold text-[#7a5d21]">{item.variantLabel}</p> : null}
+                        {item.variantLabel ? <p className="mt-1 break-words text-xs font-bold text-[#2f6b46]">{item.variantLabel}</p> : null}
                         {item.notes ? <p className="mt-1 break-words text-xs text-[#65705e]">{item.notes}</p> : null}
                       </div>
-                      <p className="text-sm font-black text-[#1687a7]">{formatShortIdr(item.lineTotalIdr)}</p>
+                      <p className="text-sm font-black text-[#2f8f5b]">{formatShortIdr(item.lineTotalIdr)}</p>
                     </div>
                   ))}
                 </div>
 
                 {order.notes || order.customerName || order.paymentMethod || order.paidAt ? (
-                  <div className="mt-3 rounded-[8px] bg-[#fffaf0] p-3 text-sm leading-6 text-[#65705e]">
+                  <div className="mt-3 rounded-[8px] bg-[#f6fbf7] p-3 text-sm leading-6 text-[#65705e]">
                     {order.customerName ? <p className="font-bold text-[#233224]">{order.customerName}</p> : null}
                     {order.notes ? <p>{order.notes}</p> : null}
                     {order.cancelReason ? <p className="font-bold text-[#b42318]">Cancel reason: {order.cancelReason}</p> : null}
@@ -325,7 +325,7 @@ export function OrderHistoryPage({
             ))}
           </div>
         ) : (
-          <div className="rounded-[8px] border border-[#e5d7bd] bg-white p-8 text-center shadow-sm">
+          <div className="rounded-[8px] border border-[#dbe8dd] bg-white p-8 text-center shadow-sm">
             <h2 className="text-2xl font-black text-[#173f2a]">Belum ada invoice</h2>
             <p className="mt-2 text-sm text-[#65705e]">Order yang completed akan muncul di sini.</p>
           </div>

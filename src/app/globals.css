@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fff9ef;
+  --background: #f6fbf7;
   --foreground: #233224;
 }
 
@@ -24,7 +24,7 @@ a,
 select,
 input,
 textarea {
-  outline-color: #1687a7;
+  outline-color: #2f8f5b;
 }
 
 input,
